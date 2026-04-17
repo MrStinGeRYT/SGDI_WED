@@ -1,0 +1,63 @@
+/* ============================================================
+   SGDI Web — Tabs Styles
+   ============================================================ */
+
+.tabs-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-5);
+  overflow-x: auto; /* Permitir scroll en móvil */
+  gap: var(--space-4);
+}
+
+.tabs-header::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.tabs-btn:hover {
+  color: var(--color-text);
+  border-bottom-color: var(--color-border-focus);
+}
+
+.tabs-btn.active {
+  color: var(--color-primary-600);
+  border-bottom-color: var(--color-primary-600);
+}
+
+[data-theme="dark"] .tabs-btn.active {
+  color: var(--color-primary-300);
+  border-bottom-color: var(--color-primary-300);
+}
+
+.tabs-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.tabs-content {
+  flex: 1;
+}

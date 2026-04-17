@@ -1,0 +1,204 @@
+/* ============================================================
+   SGDI Web — Documento Edit Styles
+   ============================================================ */
+
+.doc-edit-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  background-color: var(--color-surface);
+  margin: calc(-1 * var(--space-6)); /* Negar el padding del layout */
+}
+
+/* ── Header / Topbar ── */
+.doc-edit__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-surface-card);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.doc-edit__header-left,
+.doc-edit__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.doc-edit__title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-edit__title-input {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0;
+  width: 300px;
+}
+
+.doc-edit__title-input:focus {
+  border-bottom: 1px solid var(--color-primary-400);
+}
+
+.doc-edit__status {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* ── Área de Trabajo ── */
+.doc-edit__workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Editor Principal ── */
+.doc-edit__main {
+  flex: 1;
+  padding: var(--space-6);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-surface-alt);
+}
+
+.doc-edit__paper {
+  width: 100%;
+  max-width: 800px;
+  min-height: 1056px; /* Aprox carta a 96dpi */
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-10);
+  border-radius: var(--radius-sm);
+  display: flex;
+}
+
+[data-theme="dark"] .doc-edit__paper {
+  background-color: var(--color-surface-card);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.doc-edit__textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  resize: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text);
+  background: transparent;
+}
+
+.doc-edit__textarea::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+/* ── Sidebar (Metadatos) ── */
+.doc-edit__sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background-color: var(--color-surface-card);
+  border-left: 1px solid var(--color-border);
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.doc-edit__sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.doc-edit__sidebar-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Integration Status ── */
+.integration-status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.integration-status__icon {
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.integration-status__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.integration-status__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.integration-status__value {
+  font-size: var(--font-size-xs);
+}
+
+.status-pending { color: var(--color-warning-dark); }
+.status-none { color: var(--color-text-muted); }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .doc-edit__workspace {
+    flex-direction: column;
+  }
+  .doc-edit__sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+    height: auto;
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .doc-edit__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+  .doc-edit__header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .doc-edit__title-input {
+    width: 100%;
+  }
+  .doc-edit__main {
+    padding: var(--space-3);
+  }
+  .doc-edit__paper {
+    padding: var(--space-5);
+  }
+}

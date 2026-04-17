@@ -1,0 +1,42 @@
+[
+  {
+    "id": "email_001",
+    "subject": "Oficio de Asignación de Jurado",
+    "to": "juan.perez@institucion.edu.mx",
+    "cc": ["coordinacion@institucion.edu.mx"],
+    "date": "2026-04-16T10:45:00Z",
+    "status": "delivered",
+    "attachment": "Oficio_Jurado_Juan_Perez.pdf",
+    "sourceDocument": "doc_101"
+  },
+  {
+    "id": "email_002",
+    "subject": "Convocatoria: Semana de la Ciencia",
+    "to": "comunidad.academica@institucion.edu.mx",
+    "cc": [],
+    "date": "2026-03-05T16:25:00Z",
+    "status": "delivered",
+    "attachment": "Memo_Convocatoria_Ciencia.pdf",
+    "sourceDocument": "doc_103"
+  },
+  {
+    "id": "email_003",
+    "subject": "Informe de Avance de Tesis",
+    "to": "direccion.posgrado@institucion.edu.mx",
+    "cc": ["tutor.tesis@institucion.edu.mx"],
+    "date": "2025-12-12T10:05:00Z",
+    "status": "delivered",
+    "attachment": "Informe_Avance_Tesis.docx",
+    "sourceDocument": "doc_105"
+  },
+  {
+    "id": "email_004",
+    "subject": "Notificación de Cambio de Fecha de Examen",
+    "to": "alumno.ejemplo@institucion.edu.mx",
+    "cc": [],
+    "date": "2026-04-17T11:20:00Z",
+    "status": "pending",
+    "attachment": "Aviso_Cambio_Fecha.pdf",
+    "sourceDocument": "doc_106"
+  }
+]

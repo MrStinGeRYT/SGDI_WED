@@ -1,0 +1,18 @@
+{
+  "documentTypes": [
+    { "id": "oficio", "name": "Oficio", "description": "Comunicación formal institucional" },
+    { "id": "constancia", "name": "Constancia", "description": "Documento que acredita un hecho o situación" },
+    { "id": "memorandum", "name": "Memorándum", "description": "Comunicación interna breve" },
+    { "id": "acta", "name": "Acta", "description": "Registro oficial de una reunión o evento" },
+    { "id": "informe", "name": "Informe", "description": "Reporte detallado de actividades o resultados" }
+  ],
+  "functionalGroups": [
+    { "id": "comites", "name": "Comités" },
+    { "id": "promocion", "name": "Promoción y apoyo académico" },
+    { "id": "eventos", "name": "Eventos y organización" },
+    { "id": "campanas", "name": "Campañas y colaboración" },
+    { "id": "jurados", "name": "Jurados y comisiones" },
+    { "id": "tesis", "name": "Tesis y dirección" },
+    { "id": "seguimiento", "name": "Seguimiento institucional" }
+  ]
+}

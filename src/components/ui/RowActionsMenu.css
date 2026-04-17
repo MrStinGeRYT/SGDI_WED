@@ -1,0 +1,104 @@
+/* ============================================================
+   SGDI Web — RowActionsMenu Styles
+   Estrategia:
+   - >= 768px  → .ram__desktop visible, .ram__mobile oculto
+   - <  768px  → .ram__desktop oculto,  .ram__mobile visible (kebab)
+   ============================================================ */
+
+.ram {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative; /* Ancla al dropdown */
+}
+
+/* ── Escritorio: botones en línea ── */
+.ram__desktop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ram__btn--danger:hover {
+  color: var(--color-danger) !important;
+  background-color: rgba(220, 38, 38, 0.08) !important;
+}
+
+/* ── Móvil: oculto por defecto ── */
+.ram__mobile {
+  display: none;
+  position: relative;
+}
+
+/* ── Dropdown del menú kebab ── */
+.ram__dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-1));
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  min-width: 180px;
+  overflow: hidden;
+  animation: ram-drop-in var(--transition-fast) ease-out forwards;
+}
+
+@keyframes ram-drop-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ram__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ram__dropdown-item:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.ram__dropdown-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ram__dropdown-item--danger {
+  color: var(--color-danger);
+}
+
+.ram__dropdown-item--danger:hover {
+  background-color: rgba(220, 38, 38, 0.06);
+}
+
+.ram__dropdown-icon {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+/* ── Responsive: punto de quiebre ── */
+@media (max-width: 767px) {
+  .ram__desktop {
+    display: none;    /* Ocultar botones individuales */
+  }
+  .ram__mobile {
+    display: flex;    /* Mostrar kebab */
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

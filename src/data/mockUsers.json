@@ -1,0 +1,47 @@
+[
+  {
+    "id": "usr-001",
+    "username": "amartinez",
+    "name": "Dr. Alejandro Martínez",
+    "role": "Administrador",
+    "email": "amartinez@institucion.edu.mx",
+    "initials": "AM",
+    "avatar": null
+  },
+  {
+    "id": "usr-002",
+    "username": "mgonzalez",
+    "name": "Dra. María González",
+    "role": "Coordinadora Académica",
+    "email": "mgonzalez@institucion.edu.mx",
+    "initials": "MG",
+    "avatar": null
+  },
+  {
+    "id": "usr-003",
+    "username": "rtorres",
+    "name": "Lic. Roberto Torres",
+    "role": "Asistente Administrativo",
+    "email": "rtorres@institucion.edu.mx",
+    "initials": "RT",
+    "avatar": null
+  },
+  {
+    "id": "usr-004",
+    "username": "alopez",
+    "name": "Mtra. Ana López",
+    "role": "Responsable Documental",
+    "email": "alopez@institucion.edu.mx",
+    "initials": "AL",
+    "avatar": null
+  },
+  {
+    "id": "usr-005",
+    "username": "jramos",
+    "name": "Ing. Juan Ramos",
+    "role": "Editor Institucional",
+    "email": "jramos@institucion.edu.mx",
+    "initials": "JR",
+    "avatar": null
+  }
+]

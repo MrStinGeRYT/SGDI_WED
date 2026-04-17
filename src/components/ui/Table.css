@@ -1,0 +1,87 @@
+/* ============================================================
+   SGDI Web — Table Styles
+   ============================================================ */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-card);
+  max-height: calc(100vh - 200px); /* Para permitir scroll interno si es muy grande */
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--font-size-sm);
+}
+
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 0 var(--color-border); /* en lugar de border-bottom para que se mueva con sticky */
+}
+
+.table td {
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.table tbody tr.clickable {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+/* ── Celda de acciones ── */
+.table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  flex-wrap: nowrap;        /* evitar que los botones se dividan en filas */
+}
+
+/* La columna de acciones nunca se comprime por debajo de su contenido */
+.table td:last-child,
+.table th:last-child {
+  min-width: 120px;         /* espacio mínimo para 4 botones de 28px + gaps */
+  white-space: nowrap;
+}
+
+.table-empty {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+}
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }

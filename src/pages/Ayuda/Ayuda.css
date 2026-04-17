@@ -1,0 +1,128 @@
+/* ============================================================
+   SGDI Web — Ayuda Styles
+   ============================================================ */
+
+.ayuda-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Quick Links ── */
+.ayuda-quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-5);
+}
+
+.quick-link-card {
+  text-align: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+}
+
+.quick-link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-link-card .card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+}
+
+.quick-link-card__icon {
+  color: var(--color-primary-500);
+  margin-bottom: var(--space-2);
+}
+
+.quick-link-card__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.quick-link-card__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── Layout Grid (FAQ + Chat) ── */
+.ayuda-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* ── Chat Demo ── */
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.chat-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: var(--space-4);
+}
+
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-right: var(--space-2);
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.chat-msg--system {
+  align-self: flex-start;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 2px;
+}
+
+.chat-msg--user {
+  align-self: flex-end;
+  background-color: var(--color-primary-600);
+  color: #ffffff;
+  border-radius: var(--radius-lg) var(--radius-lg) 2px var(--radius-lg);
+}
+
+.chat-input-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.chat-input-form .form-input {
+  flex: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .ayuda-grid {
+    grid-template-columns: 1fr;
+  }
+  .chat-card {
+    height: 400px;
+  }
+}
