@@ -1,57 +1,64 @@
 // ============================================================
-// SGDI Web — BibliotecaPage
+// SGDI Web — BibliotecaPage  (Fase 1D)
 // ============================================================
 
-import React, { useState, useMemo } from 'react';
-import { BookOpen, Upload, Search, Filter, Eye, Edit, Archive, Trash, LayoutGrid, List, FileSearch, Star } from 'lucide-react';
-import Card   from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
-import Badge  from '../../components/ui/Badge';
-import Table  from '../../components/ui/Table';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  BookOpen, Upload, Search, Filter, Eye, Edit,
+  Archive, Trash, LayoutGrid, List, FileSearch, Star,
+} from 'lucide-react';
+import Card          from '../../components/ui/Card';
+import Button        from '../../components/ui/Button';
+import Badge         from '../../components/ui/Badge';
+import Table         from '../../components/ui/Table';
 import RowActionsMenu from '../../components/ui/RowActionsMenu';
 import ConfirmDialog from '../../components/ui/ConfirmDialog';
-import Modal  from '../../components/ui/Modal';
-import EmptyState from '../../components/ui/EmptyState';
-import { useToast } from '../../context/ToastContext';
-import './Biblioteca.css';
-
-import mockTemplates from '../../data/mockTemplates.json';
+import Modal         from '../../components/ui/Modal';
+import EmptyState    from '../../components/ui/EmptyState';
+import UploadTemplateModal from './UploadTemplateModal';
+import { useToast }  from '../../context/ToastContext';
+import { usePermissions } from '../../hooks/usePermissions';
+import { getTemplates, archiveTemplate } from '../../services/templateService';
 import { documentTypes, functionalGroups } from '../../data/documentTypes.json';
+import './Biblioteca.css';
+import './UploadTemplateModal.css';
 
 export default function BibliotecaPage() {
-  const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState('');
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [search, setSearch]       = useState('');
+  const [filterType, setFilterType]   = useState('');
   const [filterGroup, setFilterGroup] = useState('');
-  const [viewMode, setViewMode] = useState('table'); // 'table' | 'grid'
+  const [viewMode, setViewMode]   = useState('table');
 
-  // Modals state
-  const [previewTemplate, setPreviewTemplate] = useState(null);
-  const [archiveTemplate, setArchiveTemplate] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [previewTemplate, setPreviewTemplate]   = useState(null);
+  const [archiveTarget, setArchiveTarget]       = useState(null);
+  const [isProcessing, setIsProcessing]         = useState(false);
+  const [showUpload, setShowUpload]             = useState(false);
 
-  const { showToast } = useToast();
+  const { showToast }   = useToast();
+  const { can, noPermissionMsg } = usePermissions();
 
-  // Filtrado de datos
-  const filteredTemplates = useMemo(() => {
-    return mockTemplates.filter(tpl => {
-      const matchSearch = tpl.title.toLowerCase().includes(search.toLowerCase()) ||
-                          tpl.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()));
-      const matchType = filterType ? tpl.type === filterType : true;
-      const matchGroup = filterGroup ? tpl.functionalGroup === filterGroup : true;
-      return matchSearch && matchType && matchGroup;
-    });
+  // ── Carga de datos via servicio ──
+  const loadTemplates = useCallback(async () => {
+    setLoading(true);
+    const data = await getTemplates({ search, type: filterType, group: filterGroup });
+    setTemplates(data);
+    setLoading(false);
   }, [search, filterType, filterGroup]);
 
-  // Columnas para la tabla
+  useEffect(() => { loadTemplates(); }, [loadTemplates]);
+
+  // ── Columnas de la tabla ──
   const columns = [
     {
-      header: 'Título',
+      header: 'Plantilla',
       accessor: 'title',
       cell: (row) => (
         <div>
           <div style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text)' }}>{row.title}</div>
           <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-            {row.uploadedByName} &middot; {row.uploadedByRole}
+            {row.uploadedByName} · {row.uploadedByRole}
           </div>
         </div>
       ),
@@ -60,20 +67,16 @@ export default function BibliotecaPage() {
       header: 'Tipo',
       accessor: 'type',
       cell: (row) => {
-        const typeName = documentTypes.find(t => t.id === row.type)?.name || row.type;
-        return <Badge variant="neutral">{typeName}</Badge>;
+        const name = documentTypes.find((t) => t.id === row.type)?.name || row.type;
+        return <Badge variant="neutral">{name}</Badge>;
       },
     },
     {
       header: 'Grupo Funcional',
       accessor: 'functionalGroup',
-      cell: (row) => documentTypes.find(t => t.id === row.functionalGroup)?.name || row.functionalGroup,
+      cell: (row) => documentTypes.find((t) => t.id === row.functionalGroup)?.name || row.functionalGroup,
     },
-    {
-      header: 'Versión',
-      accessor: 'version',
-      align: 'center',
-    },
+    { header: 'Versión', accessor: 'version', align: 'center' },
     {
       header: 'Estado',
       accessor: 'status',
@@ -98,7 +101,9 @@ export default function BibliotecaPage() {
             {
               label: 'Editar',
               icon: <Edit size={16} />,
-              onClick: () => {},
+              onClick: () => showToast('Editor de plantilla no disponible en esta fase', 'info'),
+              disabled: !can('template.edit'),
+              tooltip: !can('template.edit') ? noPermissionMsg : undefined,
             },
             {
               label: 'Analizar',
@@ -109,17 +114,23 @@ export default function BibliotecaPage() {
               label: 'Clasificar',
               icon: <Star size={16} />,
               onClick: () => showToast('Clasificación no disponible en esta fase', 'info'),
+              disabled: !can('template.classify'),
+              tooltip: !can('template.classify') ? noPermissionMsg : undefined,
             },
             {
               label: 'Archivar',
               icon: <Archive size={16} />,
-              onClick: (e) => { e.stopPropagation(); setArchiveTemplate(row); },
+              onClick: (e) => { e.stopPropagation(); setArchiveTarget(row); },
+              disabled: !can('template.archive'),
+              tooltip: !can('template.archive') ? noPermissionMsg : undefined,
             },
             {
               label: 'Eliminar',
               icon: <Trash size={16} />,
               onClick: () => showToast('Eliminar no disponible en esta fase', 'info'),
               danger: true,
+              disabled: !can('template.delete'),
+              tooltip: !can('template.delete') ? noPermissionMsg : undefined,
             },
           ]}
         />
@@ -127,19 +138,19 @@ export default function BibliotecaPage() {
     },
   ];
 
-  const handleArchive = () => {
+  const handleArchive = async () => {
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setArchiveTemplate(null);
-      showToast(`Plantilla "${archiveTemplate?.title}" archivada.`, 'success');
-    }, 800);
+    await archiveTemplate(archiveTarget.id);
+    setIsProcessing(false);
+    setArchiveTarget(null);
+    showToast(`Plantilla "${archiveTarget.title}" archivada.`, 'success');
+    loadTemplates();
   };
 
   return (
     <div className="biblioteca-page">
 
-      {/* ── Encabezado ── */}
+      {/* Encabezado */}
       <div className="page-header">
         <div className="page-header__row">
           <div>
@@ -147,14 +158,21 @@ export default function BibliotecaPage() {
             <p className="page-header__subtitle">Gestión y clasificación de plantillas documentales institucionales</p>
           </div>
           <div className="btn-group">
-            <Button variant="primary" id="btn-subir-plantilla" leftIcon={<Upload size={16} />}>
+            <Button
+              variant="primary"
+              id="btn-subir-plantilla"
+              leftIcon={<Upload size={16} />}
+              onClick={() => setShowUpload(true)}
+              disabled={!can('template.upload')}
+              title={!can('template.upload') ? 'No tienes permisos para subir plantillas' : undefined}
+            >
               Subir plantilla
             </Button>
           </div>
         </div>
       </div>
 
-      {/* ── Barra de herramientas ── */}
+      {/* Barra de herramientas */}
       <div className="toolbar">
         <div className="toolbar__search">
           <div className="search-bar">
@@ -178,7 +196,7 @@ export default function BibliotecaPage() {
               onChange={(e) => setFilterType(e.target.value)}
             >
               <option value="">Todos los tipos</option>
-              {documentTypes.map(t => (
+              {documentTypes.map((t) => (
                 <option key={t.id} value={t.id}>{t.name}</option>
               ))}
             </select>
@@ -191,7 +209,7 @@ export default function BibliotecaPage() {
               onChange={(e) => setFilterGroup(e.target.value)}
             >
               <option value="">Todos los grupos</option>
-              {functionalGroups.map(g => (
+              {functionalGroups.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
               ))}
             </select>
@@ -216,29 +234,26 @@ export default function BibliotecaPage() {
         </div>
       </div>
 
-      {/* ── Contenido principal ── */}
-      {filteredTemplates.length === 0 ? (
-        /* Estado vacío — aplica tanto a tabla como a grid */
+      {/* Contenido */}
+      {loading ? (
+        <Card style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ color: 'var(--color-text-muted)' }}>Cargando plantillas…</span>
+        </Card>
+      ) : templates.length === 0 ? (
         <Card style={{ minHeight: '300px' }}>
           <EmptyState
             icon={BookOpen}
             title="No se encontraron plantillas"
-            description="Intenta ajustar los filtros o el término de búsqueda para encontrar lo que necesitas."
+            description="Intenta ajustar los filtros o el término de búsqueda."
           />
         </Card>
       ) : viewMode === 'table' ? (
-        /* Vista tabla */
         <Card>
-          <Table
-            columns={columns}
-            data={filteredTemplates}
-            onRowClick={(row) => setPreviewTemplate(row)}
-          />
+          <Table columns={columns} data={templates} onRowClick={(row) => setPreviewTemplate(row)} />
         </Card>
       ) : (
-        /* Vista cuadrícula */
         <div className="templates-grid">
-          {filteredTemplates.map(tpl => (
+          {templates.map((tpl) => (
             <Card key={tpl.id} className="template-card">
               <Card.Body>
                 <div className="template-card__header">
@@ -246,30 +261,25 @@ export default function BibliotecaPage() {
                     {tpl.status === 'active' ? 'Activo' : 'Archivado'}
                   </Badge>
                   <div className="template-card__actions">
-                    <button
-                      className="btn btn--icon btn--ghost btn--sm"
-                      onClick={() => setPreviewTemplate(tpl)}
-                    >
+                    <button className="btn btn--icon btn--ghost btn--sm" onClick={() => setPreviewTemplate(tpl)}>
                       <Eye size={16} />
                     </button>
                     <button
                       className="btn btn--icon btn--ghost btn--sm"
-                      onClick={() => setArchiveTemplate(tpl)}
+                      onClick={() => setArchiveTarget(tpl)}
+                      disabled={!can('template.archive')}
+                      title={!can('template.archive') ? noPermissionMsg : 'Archivar'}
                     >
                       <Archive size={16} />
                     </button>
                   </div>
                 </div>
-
                 <h3 className="template-card__title">{tpl.title}</h3>
                 <p className="template-card__desc">{tpl.description}</p>
-
                 <div className="template-card__meta">
                   <div className="meta-item">
                     <span className="meta-label">Tipo:</span>
-                    <span className="meta-value">
-                      {documentTypes.find(t => t.id === tpl.type)?.name || tpl.type}
-                    </span>
+                    <span className="meta-value">{documentTypes.find((t) => t.id === tpl.type)?.name || tpl.type}</span>
                   </div>
                   <div className="meta-item">
                     <span className="meta-label">Versión:</span>
@@ -284,9 +294,8 @@ export default function BibliotecaPage() {
                     <span className="meta-value" style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>{tpl.uploadedByRole}</span>
                   </div>
                 </div>
-
                 <div className="template-card__tags">
-                  {tpl.tags.map(tag => (
+                  {(tpl.tags || []).map((tag) => (
                     <span key={tag} className="tag-chip">#{tag}</span>
                   ))}
                 </div>
@@ -296,9 +305,7 @@ export default function BibliotecaPage() {
         </div>
       )}
 
-      {/* ── Modales ── */}
-
-      {/* Preview de plantilla */}
+      {/* Modal de detalle */}
       <Modal
         isOpen={!!previewTemplate}
         onClose={() => setPreviewTemplate(null)}
@@ -323,48 +330,51 @@ export default function BibliotecaPage() {
               {previewTemplate.description}
             </p>
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 'var(--space-4)',
-              marginTop: 'var(--space-4)',
-              padding: 'var(--space-4)',
-              background: 'var(--color-surface-alt)',
-              borderRadius: 'var(--radius-md)',
+              display: 'grid', gridTemplateColumns: '1fr 1fr',
+              gap: 'var(--space-4)', padding: 'var(--space-4)',
+              background: 'var(--color-surface-alt)', borderRadius: 'var(--radius-md)',
             }}>
-              <div>
-                <strong style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Tipo</strong>
-                {documentTypes.find(t => t.id === previewTemplate.type)?.name}
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Grupo Funcional</strong>
-                {documentTypes.find(t => t.id === previewTemplate.functionalGroup)?.name}
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Subido por</strong>
-                {previewTemplate.uploadedByName}
-                <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'block', marginTop: '2px' }}>
-                  {previewTemplate.uploadedByRole}
-                </span>
-              </div>
-              <div>
-                <strong style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Versión</strong>
-                {previewTemplate.version}
-              </div>
+              {[
+                ['Tipo', documentTypes.find((t) => t.id === previewTemplate.type)?.name],
+                ['Grupo Funcional', documentTypes.find((t) => t.id === previewTemplate.functionalGroup)?.name],
+                ['Subido por', previewTemplate.uploadedByName],
+                ['Versión', previewTemplate.version],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <strong style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>{label}</strong>
+                  <span style={{ fontSize: 'var(--font-size-sm)' }}>{value}</span>
+                  {label === 'Subido por' && (
+                    <span style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                      {previewTemplate.uploadedByRole}
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         )}
       </Modal>
 
-      {/* Confirmación de archivo */}
+      {/* Confirm archivar */}
       <ConfirmDialog
-        isOpen={!!archiveTemplate}
-        onClose={() => setArchiveTemplate(null)}
+        isOpen={!!archiveTarget}
+        onClose={() => setArchiveTarget(null)}
         onConfirm={handleArchive}
         title="Archivar Plantilla"
-        message={`¿Estás seguro de que deseas archivar la plantilla "${archiveTemplate?.title}"? Ya no estará disponible para nuevos documentos.`}
+        message={`¿Estás seguro de que deseas archivar "${archiveTarget?.title}"? Ya no estará disponible para nuevos documentos.`}
         confirmText="Archivar"
         confirmVariant="warning"
         isLoading={isProcessing}
+      />
+
+      {/* Modal subir plantilla */}
+      <UploadTemplateModal
+        isOpen={showUpload}
+        onClose={() => setShowUpload(false)}
+        onUploaded={(tpl) => {
+          showToast(`Plantilla "${tpl.title}" guardada correctamente.`, 'success');
+          loadTemplates();
+        }}
       />
 
     </div>

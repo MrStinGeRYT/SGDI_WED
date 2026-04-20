@@ -1,0 +1,156 @@
+/* ============================================================
+   SGDI Web — BitacoraPage Styles
+   ============================================================ */
+
+.bitacora-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Stats rápidas ── */
+.bitacora-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.bitacora-stat-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bitacora-stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-500);
+  line-height: 1;
+}
+
+.bitacora-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Lista de eventos ── */
+.bitacora-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.bitacora-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-fast);
+}
+
+.bitacora-entry:last-child {
+  border-bottom: none;
+}
+
+.bitacora-entry:hover {
+  background-color: var(--color-surface-alt);
+}
+
+/* Avatar */
+.bitacora-entry__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .bitacora-entry__avatar {
+  background: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
+  color: var(--color-primary-300);
+}
+
+/* Cuerpo */
+.bitacora-entry__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bitacora-entry__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.bitacora-entry__user {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.bitacora-entry__action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.bitacora-entry__target {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-style: italic;
+}
+
+.bitacora-entry__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.bitacora-entry__module {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.bitacora-entry__sep {
+  opacity: 0.4;
+}
+
+.bitacora-entry__time {
+  vertical-align: middle;
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .bitacora-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .bitacora-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .bitacora-entry {
+    padding: var(--space-3) var(--space-4);
+  }
+}

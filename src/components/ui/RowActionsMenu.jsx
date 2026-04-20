@@ -76,13 +76,17 @@ export default function RowActionsMenu({ actions = [] }) {
             {actions.map((action, i) => (
               <button
                 key={i}
-                className={`ram__dropdown-item ${action.danger ? 'ram__dropdown-item--danger' : ''}`}
+                className={`ram__dropdown-item ${action.danger ? 'ram__dropdown-item--danger' : ''} ${action.disabled ? 'ram__dropdown-item--disabled' : ''}`}
                 role="menuitem"
                 disabled={action.disabled}
+                aria-disabled={action.disabled}
+                title={action.tooltip || undefined}
                 onClick={(e) => {
                   e.stopPropagation();
-                  action.onClick(e);
-                  setOpen(false);
+                  if (!action.disabled) {
+                    action.onClick(e);
+                    setOpen(false);
+                  }
                 }}
               >
                 <span className="ram__dropdown-icon">{action.icon}</span>

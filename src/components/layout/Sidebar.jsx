@@ -6,7 +6,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, BookOpen, FileText, Mail,
+  LayoutDashboard, BookOpen, FileText, Mail, ClipboardList,
   Settings, HelpCircle, ChevronLeft, ChevronRight,
   LogOut,
 } from 'lucide-react';
@@ -38,6 +38,12 @@ const NAV_ITEMS = [
     icon:    Mail,
     to:      ROUTES.CORREOS,
     tooltip: 'Envío de correos',
+  },
+  {
+    label:   'Bitácora',
+    icon:    ClipboardList,
+    to:      ROUTES.BITACORA,
+    tooltip: 'Historial de actividad',
   },
 ];
 

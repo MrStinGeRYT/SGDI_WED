@@ -15,6 +15,7 @@ export const ROUTES = {
   DOCUMENTOS:     '/documentos',
   DOCUMENTO_EDIT: '/documentos/:id',
   CORREOS:        '/correos',
+  BITACORA:       '/bitacora',
   CONFIGURACION:  '/configuracion',
   AYUDA:          '/ayuda',
 };

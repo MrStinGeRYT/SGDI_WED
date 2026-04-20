@@ -2,7 +2,7 @@
 // SGDI Web — CorreosPage
 // ============================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Send, Paperclip, CheckCircle, Clock } from 'lucide-react';
 import Card   from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -10,30 +10,34 @@ import Badge  from '../../components/ui/Badge';
 import Table  from '../../components/ui/Table';
 import EmptyState from '../../components/ui/EmptyState';
 import { useToast } from '../../context/ToastContext';
+import { getEmails, sendEmail } from '../../services/emailService';
 import './Correos.css';
 
-import mockEmails from '../../data/mockEmails.json';
-
 export default function CorreosPage() {
-  const [to, setTo] = useState('');
-  const [cc, setCc] = useState('');
+  const [to, setTo]           = useState('');
+  const [cc, setCc]           = useState('');
   const [subject, setSubject] = useState('');
-  const [body, setBody] = useState('');
+  const [body, setBody]       = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [emails, setEmails]   = useState([]);
   const { showToast } = useToast();
 
-  const handleSend = (e) => {
+  useEffect(() => {
+    getEmails().then(setEmails);
+  }, []);
+
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!to || !subject || !body) {
-      showToast("Por favor completa los campos requeridos.", "error");
+      showToast('Por favor completa los campos requeridos.', 'error');
       return;
     }
     setIsSending(true);
-    setTimeout(() => {
-      setIsSending(false);
-      showToast("Correo institucional enviado exitosamente.", "success");
-      setTo(''); setCc(''); setSubject(''); setBody('');
-    }, 1000);
+    const newEmail = await sendEmail({ to, cc, subject, body });
+    setEmails((prev) => [newEmail, ...prev]);
+    setIsSending(false);
+    showToast(`Correo enviado a ${to} exitosamente.`, 'success');
+    setTo(''); setCc(''); setSubject(''); setBody('');
   };
 
   const columns = [
@@ -175,7 +179,7 @@ export default function CorreosPage() {
               </h2>
             </Card.Header>
             <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {mockEmails.length === 0 ? (
+              {emails.length === 0 ? (
                 <EmptyState 
                   icon={Clock} 
                   title="No hay correos enviados" 
@@ -184,7 +188,7 @@ export default function CorreosPage() {
               ) : (
                 <Table 
                   columns={columns} 
-                  data={mockEmails} 
+                  data={emails} 
                 />
               )}
             </div>

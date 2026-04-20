@@ -26,6 +26,7 @@ import BibliotecaPage    from './pages/Biblioteca/BibliotecaPage';
 import DocumentosPage    from './pages/Documentos/DocumentosPage';
 import DocumentoEditPage from './pages/Documentos/DocumentoEditPage';
 import CorreosPage       from './pages/Correos/CorreosPage';
+import BitacoraPage      from './pages/Bitacora/BitacoraPage';
 import ConfiguracionPage from './pages/Configuracion/ConfiguracionPage';
 import AyudaPage         from './pages/Ayuda/AyudaPage';
 
@@ -89,6 +90,7 @@ function AppRouter() {
         <Route path={ROUTES.DOCUMENTOS}      element={<DocumentosPage />} />
         <Route path={ROUTES.DOCUMENTO_EDIT}  element={<DocumentoEditPage />} />
         <Route path={ROUTES.CORREOS}         element={<CorreosPage />} />
+        <Route path={ROUTES.BITACORA}         element={<BitacoraPage />} />
         <Route path={ROUTES.CONFIGURACION}   element={<ConfiguracionPage />} />
         <Route path={ROUTES.AYUDA}           element={<AyudaPage />} />
       </Route>

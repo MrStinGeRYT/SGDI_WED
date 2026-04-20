@@ -1,0 +1,180 @@
+/* ============================================================
+   SGDI Web — CreateDocumentModal Styles
+   ============================================================ */
+
+/* Indicador de pasos */
+.cdm-steps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-4);
+}
+
+.cdm-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
+}
+
+.cdm-step--active,
+.cdm-step--done {
+  opacity: 1;
+}
+
+.cdm-step__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-surface-alt);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.cdm-step--active .cdm-step__dot {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  color: white;
+}
+
+.cdm-step--done .cdm-step__dot {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.cdm-step__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.cdm-step--active .cdm-step__label {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Cuerpo del modal */
+.cdm-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Lista de plantillas */
+.cdm-template-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: var(--space-1);
+}
+
+.cdm-template-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-alt);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  width: 100%;
+}
+
+.cdm-template-item:hover {
+  border-color: var(--color-border-focus);
+}
+
+.cdm-template-item--selected {
+  border-color: var(--color-primary-500);
+  background: color-mix(in srgb, var(--color-primary-500) 6%, var(--color-surface-alt));
+}
+
+.cdm-template-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cdm-template-item__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.cdm-template-item__meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Resumen */
+.cdm-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.cdm-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-3);
+}
+
+.cdm-summary__row:last-child { border-bottom: none; }
+
+.cdm-summary__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.cdm-summary__value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  text-align: right;
+}
+
+/* Footer de botones */
+.cdm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 480px) {
+  .cdm-step__label { display: none; }
+  .cdm-footer { flex-direction: column; }
+}

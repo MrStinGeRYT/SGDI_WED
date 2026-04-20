@@ -2,6 +2,7 @@
   {
     "id": "usr-001",
     "username": "amartinez",
+    "password": "admin123",
     "name": "Dr. Alejandro Martínez",
     "role": "Administrador",
     "email": "amartinez@institucion.edu.mx",
@@ -11,6 +12,7 @@
   {
     "id": "usr-002",
     "username": "mgonzalez",
+    "password": "pass123",
     "name": "Dra. María González",
     "role": "Coordinadora Académica",
     "email": "mgonzalez@institucion.edu.mx",
@@ -20,6 +22,7 @@
   {
     "id": "usr-003",
     "username": "rtorres",
+    "password": "pass123",
     "name": "Lic. Roberto Torres",
     "role": "Asistente Administrativo",
     "email": "rtorres@institucion.edu.mx",
@@ -29,6 +32,7 @@
   {
     "id": "usr-004",
     "username": "alopez",
+    "password": "pass123",
     "name": "Mtra. Ana López",
     "role": "Responsable Documental",
     "email": "alopez@institucion.edu.mx",
@@ -38,6 +42,7 @@
   {
     "id": "usr-005",
     "username": "jramos",
+    "password": "pass123",
     "name": "Ing. Juan Ramos",
     "role": "Editor Institucional",
     "email": "jramos@institucion.edu.mx",
