@@ -164,8 +164,47 @@
   font-size: var(--font-size-xs);
 }
 
-.status-pending { color: var(--color-warning-dark); }
-.status-none { color: var(--color-text-muted); }
+.status-pending  { color: var(--color-warning-dark); }
+.status-none     { color: var(--color-text-muted); }
+.status-synced   { color: var(--color-success); }
+.status-syncing  { color: var(--color-warning-dark); }
+
+/* ── Animación spin para Loader ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* ── Meta rows de trazabilidad ── */
+.doc-edit__meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.doc-edit__meta-row:last-child {
+  border-bottom: none;
+}
+.doc-edit__meta-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  min-width: 90px;
+}
+.doc-edit__meta-value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Timestamps ── */
+.doc-edit__timestamps {
+  gap: var(--space-2);
+}
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {

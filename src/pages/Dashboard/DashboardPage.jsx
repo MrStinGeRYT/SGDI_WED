@@ -3,7 +3,7 @@
 // Panel principal con métricas, accesos rápidos y actividad
 // ============================================================
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FileText, BookOpen, Mail, Clock,
@@ -17,9 +17,11 @@ import Button   from '../../components/ui/Button';
 import { AiStatusIndicator, Ms365StatusIndicator } from '../../components/ui/StatusIndicator';
 import { useAuth } from '../../context/AuthContext';
 import { useApp  } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import { ROUTES  } from '../../utils/constants';
 import { formatRelativeTime, formatNumber } from '../../utils/formatters';
-import mockDashboard from '../../data/mockDashboard.json';
+import { connectMs365 } from '../../services/ms365Service';
+import { getDashboardSummary } from '../../services/dashboardService';
 import './Dashboard.css';
 
 // ── Configuración de tarjetas de métricas ──
@@ -125,10 +127,24 @@ const ACTIVITY_STATUS_BADGE = {
 export default function DashboardPage() {
   const { user }          = useAuth();
   const { systemStatus }  = useApp();
+  const { showToast }     = useToast();
   const navigate          = useNavigate();
-  const { stats, recentActivity } = mockDashboard;
+  const [connectingMs365, setConnectingMs365]     = useState(false);
+  const [dashboardData, setDashboardData]         = useState({ stats: {}, recentActivity: [] });
 
+  useEffect(() => {
+    getDashboardSummary().then(setDashboardData);
+  }, []);
+
+  const { stats, recentActivity } = dashboardData;
   const greeting = getGreeting();
+
+  const handleConnectMs365 = async () => {
+    setConnectingMs365(true);
+    const result = await connectMs365();
+    setConnectingMs365(false);
+    showToast(result.message, 'warning');
+  };
 
   return (
     <div>
@@ -296,8 +312,10 @@ export default function DashboardPage() {
                   id="btn-conectar-ms365"
                   leftIcon={<Link size={14} />}
                   style={{ marginTop: '4px' }}
+                  onClick={handleConnectMs365}
+                  disabled={connectingMs365}
                 >
-                  Conectar Microsoft 365
+                  {connectingMs365 ? 'Conectando…' : 'Conectar Microsoft 365'}
                 </Button>
               </div>
 
