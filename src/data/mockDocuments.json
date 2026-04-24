@@ -5,6 +5,7 @@
     "type": "oficio",
     "functionalGroup": "jurados",
     "status": "enviado",
+    "content": "",
     "createdAt": "2026-04-16T10:00:00Z",
     "updatedAt": "2026-04-16T10:45:00Z",
     "createdById": "usr-002",
@@ -15,7 +16,19 @@
     "updatedByRole": "Administrador",
     "templateSource": "tpl_001",
     "cloudStatus": "synced",
-    "emailStatus": "sent"
+    "emailStatus": "sent",
+    "fields": {
+      "numero_oficio": "FCI-DAC-2026-042",
+      "lugar_fecha": "2026-04-16",
+      "destinatario": "M. en C. Juan Carlos Pérez Ramírez",
+      "cargo_destinatario": "Presidente del Jurado de Tesis",
+      "asunto": "Designación de integrantes del jurado de tesis del alumno Pedro García Morales",
+      "cuerpo": "Por medio del presente, y en atención a las funciones que me confiere el Reglamento de Posgrado de esta institución, me permito informar a usted que ha sido designado como Presidente del Jurado para el examen de grado del alumno Pedro García Morales, con número de cuenta 315089721, quien sustentará la tesis titulada: \"Implementación de Redes Neuronales para el Reconocimiento de Patrones en Sistemas de Control Industrial\".\n\nEl examen de grado se llevará a cabo el día 30 de abril de 2026 a las 10:00 horas, en el Aula de Exámenes de Posgrado, edificio B, planta baja.\n\nSe le solicita confirmar su asistencia a la brevedad posible al correo electrónico posgrado@fci.uim.edu.mx o al teléfono ext. 50000.\n\nAgradezco de antemano su valiosa participación en este proceso académico.",
+      "firmante": "Dra. María González",
+      "cargo_firmante": "Coordinadora Académica de Posgrado",
+      "copia": "Archivo, Interesado",
+      "anexos": ""
+    }
   },
   {
     "id": "doc_102",
@@ -23,6 +36,7 @@
     "type": "constancia",
     "functionalGroup": "comites",
     "status": "borrador",
+    "content": "",
     "createdAt": "2026-04-17T09:30:00Z",
     "updatedAt": "2026-04-17T09:30:00Z",
     "createdById": "usr-004",
@@ -33,7 +47,8 @@
     "updatedByRole": "Responsable Documental",
     "templateSource": "tpl_002",
     "cloudStatus": "pending",
-    "emailStatus": "none"
+    "emailStatus": "none",
+    "fields": {}
   },
   {
     "id": "doc_103",
@@ -41,6 +56,7 @@
     "type": "memorandum",
     "functionalGroup": "eventos",
     "status": "archivado",
+    "content": "",
     "createdAt": "2026-03-01T14:15:00Z",
     "updatedAt": "2026-03-05T16:20:00Z",
     "createdById": "usr-005",
@@ -51,7 +67,8 @@
     "updatedByRole": "Administrador",
     "templateSource": "tpl_003",
     "cloudStatus": "synced",
-    "emailStatus": "sent"
+    "emailStatus": "sent",
+    "fields": {}
   },
   {
     "id": "doc_104",
@@ -59,6 +76,7 @@
     "type": "acta",
     "functionalGroup": "seguimiento",
     "status": "borrador",
+    "content": "",
     "createdAt": "2026-04-15T11:00:00Z",
     "updatedAt": "2026-04-15T15:30:00Z",
     "createdById": "usr-003",
@@ -69,7 +87,8 @@
     "updatedByRole": "Asistente Administrativo",
     "templateSource": "tpl_004",
     "cloudStatus": "synced",
-    "emailStatus": "none"
+    "emailStatus": "none",
+    "fields": {}
   },
   {
     "id": "doc_105",
@@ -77,6 +96,7 @@
     "type": "informe",
     "functionalGroup": "tesis",
     "status": "enviado",
+    "content": "",
     "createdAt": "2025-12-10T08:45:00Z",
     "updatedAt": "2025-12-12T10:00:00Z",
     "createdById": "usr-002",
@@ -87,6 +107,7 @@
     "updatedByRole": "Administrador",
     "templateSource": "tpl_005",
     "cloudStatus": "synced",
-    "emailStatus": "sent"
+    "emailStatus": "sent",
+    "fields": {}
   }
 ]

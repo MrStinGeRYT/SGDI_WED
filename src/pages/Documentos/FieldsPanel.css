@@ -1,0 +1,211 @@
+/* ============================================================
+   SGDI Web — FieldsPanel
+   Panel lateral de campos editables del documento.
+   ============================================================ */
+
+.fields-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Tabs de secciones ── */
+.fields-panel__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background-color: var(--color-surface-card);
+}
+
+.fields-panel__tab {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.fields-panel__tab:hover {
+  color: var(--color-text);
+}
+
+.fields-panel__tab--active {
+  color: var(--color-primary-500);
+  border-bottom-color: var(--color-primary-500);
+}
+
+/* ── Contenido scrollable ── */
+.fields-panel__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Sección de campos ── */
+.fields-panel__section-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-1);
+}
+
+/* ── Campo individual ── */
+.fields-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fields-panel__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fields-panel__required {
+  color: var(--color-danger);
+  font-size: 10px;
+}
+
+.fields-panel__hint {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 1px;
+}
+
+/* ── Inputs compactos ── */
+.fields-panel__input,
+.fields-panel__select {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: var(--font-family);
+}
+
+.fields-panel__input:focus,
+.fields-panel__select:focus {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 2px var(--color-primary-100);
+}
+
+[data-theme="dark"] .fields-panel__input:focus,
+[data-theme="dark"] .fields-panel__select:focus {
+  box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.15);
+}
+
+.fields-panel__input::placeholder {
+  color: var(--color-input-placeholder);
+  font-size: var(--font-size-xs);
+}
+
+.fields-panel__textarea {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+  font-family: var(--font-family);
+  transition: border-color 0.15s;
+}
+
+.fields-panel__textarea:focus {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 2px var(--color-primary-100);
+}
+
+[data-theme="dark"] .fields-panel__textarea:focus {
+  box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.15);
+}
+
+.fields-panel__textarea::placeholder {
+  color: var(--color-input-placeholder);
+  font-size: var(--font-size-xs);
+}
+
+/* ── Meta row (trazabilidad) ── */
+.fields-panel__meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fields-panel__meta-row:last-child {
+  border-bottom: none;
+}
+
+.fields-panel__meta-key {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fields-panel__meta-val {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.fields-panel__meta-sub {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+/* ── Estado de integración ── */
+.fields-panel__integration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.fields-panel__integration-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fields-panel__integration-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.fields-panel__integration-val {
+  font-size: 10px;
+}

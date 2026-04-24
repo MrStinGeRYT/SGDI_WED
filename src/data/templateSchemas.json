@@ -1,0 +1,22 @@
+{
+  "oficio": {
+    "layout": "oficio",
+    "description": "Comunicación formal institucional",
+    "fields": [
+      { "id": "numero_oficio",    "label": "Número de oficio",       "type": "text",     "required": true,  "placeholder": "FCI-DAC-2026-001",               "hint": "Folio o número de control" },
+      { "id": "lugar_fecha",      "label": "Fecha",                  "type": "date",     "required": true,  "placeholder": "",                               "hint": "Fecha de emisión del documento" },
+      { "id": "destinatario",     "label": "Destinatario",           "type": "text",     "required": true,  "placeholder": "Dr. Juan Pérez García",           "hint": "" },
+      { "id": "cargo_destinatario","label": "Cargo del destinatario","type": "text",     "required": true,  "placeholder": "Director de Posgrado",            "hint": "" },
+      { "id": "asunto",           "label": "Asunto",                 "type": "text",     "required": true,  "placeholder": "Designación de miembro de jurado","hint": "" },
+      { "id": "cuerpo",           "label": "Cuerpo del documento",   "type": "textarea", "required": true,  "placeholder": "Por medio del presente...",       "hint": "Redacta el contenido del oficio" },
+      { "id": "firmante",         "label": "Nombre del firmante",    "type": "text",     "required": true,  "placeholder": "Dra. María González",             "hint": "" },
+      { "id": "cargo_firmante",   "label": "Cargo del firmante",     "type": "text",     "required": true,  "placeholder": "Coordinadora Académica",          "hint": "" },
+      { "id": "copia",            "label": "c.c.p.",                 "type": "text",     "required": false, "placeholder": "Archivo, Interesado",             "hint": "Separar con comas" },
+      { "id": "anexos",           "label": "Anexos",                 "type": "text",     "required": false, "placeholder": "Ninguno",                         "hint": "" }
+    ]
+  },
+  "constancia":  { "layout": "constancia",  "description": "Documento que acredita un hecho o situación", "fields": [] },
+  "memorandum":  { "layout": "memorandum",  "description": "Comunicación interna breve",                  "fields": [] },
+  "acta":        { "layout": "acta",        "description": "Registro oficial de reunión o evento",         "fields": [] },
+  "informe":     { "layout": "informe",     "description": "Reporte detallado de actividades",             "fields": [] }
+}

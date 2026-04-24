@@ -4,7 +4,8 @@
 // Mock: lee de JSON estático. Listo para reemplazar con HTTP.
 // ============================================================
 
-import mockTemplates from '../data/mockTemplates.json';
+import mockTemplates    from '../data/mockTemplates.json';
+import templateSchemas  from '../data/templateSchemas.json';
 import { auditService } from './auditService';
 import { getCurrentUser } from './userService';
 
@@ -130,8 +131,19 @@ export async function deleteTemplate(id) {
   return true;
 }
 
+/**
+ * Devuelve el schema de campos para un tipo documental.
+ * En Fase 2: GET /api/template-schemas/:type
+ * @param {string} type - 'oficio' | 'constancia' | 'memorandum' | 'acta' | 'informe'
+ */
+export async function getTemplateSchema(type) {
+  await delay(0);
+  return templateSchemas[type] || null;
+}
+
 const templateService = {
   getTemplates, getTemplateById, uploadTemplate,
   archiveTemplate, deleteTemplate, suggestClassification,
+  getTemplateSchema,
 };
 export default templateService;
