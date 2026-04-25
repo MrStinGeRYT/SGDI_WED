@@ -1,0 +1,109 @@
+/* ============================================================
+   SGDI Web — ConstanciaLayout.css
+   ============================================================ */
+
+.constancia-layout {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  font-size: 12pt;
+  line-height: 1.65;
+  color: #1a1a1a;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.constancia-layout__title {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 17pt;
+  font-weight: bold;
+  color: #1b3a6b;
+  letter-spacing: 4px;
+  margin: 18px 0 26px;
+}
+
+.constancia-layout__intro {
+  margin: 0 0 10px;
+  text-align: justify;
+  font-size: 11pt;
+}
+
+.constancia-layout__hace-constar {
+  text-align: center;
+  font-weight: bold;
+  font-size: 13pt;
+  letter-spacing: 2px;
+  color: #1b3a6b;
+  margin: 12px 0 14px;
+}
+
+.constancia-layout__certificado {
+  margin: 0 0 10px;
+  text-align: justify;
+  font-size: 11pt;
+}
+
+.constancia-layout__bold {
+  font-weight: bold;
+}
+
+.constancia-layout__periodo {
+  margin: 0 0 8px;
+  font-size: 11pt;
+}
+
+.constancia-layout__descripcion {
+  margin: 0 0 10px;
+  text-align: justify;
+  font-size: 11pt;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.constancia-layout__expedicion {
+  margin: 12px 0 0;
+  text-align: justify;
+  font-size: 11pt;
+}
+
+.constancia-layout__firma-block {
+  margin-top: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.constancia-layout__atentamente {
+  font-style: italic;
+  font-size: 10.5pt;
+  color: #4a5568;
+  margin-bottom: 28px;
+}
+
+.constancia-layout__firma-nombre {
+  font-weight: bold;
+  font-size: 11pt;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 4px;
+  min-width: 220px;
+  text-align: center;
+}
+
+.constancia-layout__firma-cargo {
+  font-size: 10.5pt;
+  text-align: center;
+}
+
+.constancia-layout__footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #d4a843;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 7.5pt;
+  color: #718096;
+  line-height: 1.4;
+}

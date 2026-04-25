@@ -1,0 +1,129 @@
+/* ============================================================
+   SGDI Web — DocumentPreviewModal.css
+   Modal de vista previa de solo lectura.
+   ============================================================ */
+
+/* ── Overlay ── */
+.preview-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.72);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  animation: preview-modal-fade-in 0.18s ease;
+}
+
+@keyframes preview-modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Header del modal ── */
+.preview-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-surface-card);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  gap: var(--space-4);
+  min-height: 52px;
+}
+
+.preview-modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.preview-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-600);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .preview-modal__badge {
+  background-color: rgba(99, 179, 237, 0.15);
+  color: var(--color-primary-300);
+}
+
+.preview-modal__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.preview-modal__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── Cuerpo scrollable ── */
+.preview-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  /* DocumentPreview ya maneja el centrado y el fondo */
+}
+
+/* ── Pie del modal con tipo y fecha ── */
+.preview-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-6);
+  background-color: var(--color-surface-card);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.preview-modal__footer-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.preview-modal__footer-sep {
+  width: 1px;
+  height: 12px;
+  background-color: var(--color-border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .preview-modal__header {
+    padding: var(--space-2) var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .preview-modal__header-right {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .preview-modal__footer {
+    padding: var(--space-2) var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}

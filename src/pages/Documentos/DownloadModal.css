@@ -1,0 +1,187 @@
+/* ============================================================
+   SGDI Web — DownloadModal.css
+   Modal selector de formato de descarga.
+   ============================================================ */
+
+/* ── Overlay ── */
+.download-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: var(--space-4);
+  animation: download-modal-fade 0.15s ease;
+}
+
+@keyframes download-modal-fade {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Panel ── */
+.download-modal__panel {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.download-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  gap: var(--space-3);
+}
+
+.download-modal__header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.download-modal__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.download-modal__subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+/* ── Cuerpo ── */
+.download-modal__body {
+  padding: var(--space-2) var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Tarjetas de formato ── */
+.download-modal__formats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.download-modal__format-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.1s;
+  text-align: center;
+}
+
+.download-modal__format-card:hover:not(:disabled) {
+  border-color: var(--color-primary-400);
+  background-color: var(--color-primary-50);
+  transform: translateY(-1px);
+}
+
+.download-modal__format-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+[data-theme="dark"] .download-modal__format-card:hover:not(:disabled) {
+  background-color: rgba(99, 179, 237, 0.08);
+}
+
+/* ── Ícono del formato ── */
+.download-modal__format-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.download-modal__format-icon--docx {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.download-modal__format-icon--pdf {
+  background-color: #fce8e6;
+  color: #d93025;
+}
+
+[data-theme="dark"] .download-modal__format-icon--docx {
+  background-color: rgba(26, 115, 232, 0.15);
+  color: #90b8f8;
+}
+
+[data-theme="dark"] .download-modal__format-icon--pdf {
+  background-color: rgba(217, 48, 37, 0.15);
+  color: #f28b82;
+}
+
+.download-modal__format-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.download-modal__format-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.download-modal__format-ext {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* ── Spinner dentro de tarjeta ── */
+.download-modal__format-card.loading {
+  pointer-events: none;
+}
+
+/* ── Nota informativa ── */
+.download-modal__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ── Animación spin ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}

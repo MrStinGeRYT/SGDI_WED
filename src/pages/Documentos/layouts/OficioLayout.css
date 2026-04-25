@@ -1,11 +1,9 @@
 /* ============================================================
-   SGDI Web — OficioLayout
-   Estilos del documento institucional tipo oficio.
-   IMPORTANTE: Este CSS aplica al papel (vista previa).
-   El papel SIEMPRE es blanco — incluso en modo oscuro.
+   SGDI Web — OficioLayout.css
+   Estilos exclusivos del tipo documental Oficio.
+   El encabezado institucional (membrete) está en MembreteBase.css.
    ============================================================ */
 
-/* ── Reset de tipografía dentro del papel ── */
 .oficio-layout {
   font-family: 'Times New Roman', Times, Georgia, serif;
   font-size: 12pt;
@@ -17,74 +15,7 @@
   flex-direction: column;
 }
 
-/* ── Membrete ── */
-.oficio-layout__header {
-  display: grid;
-  grid-template-columns: 80px 1fr 70px;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 10px;
-  margin-bottom: 4px;
-}
-
-.oficio-layout__logo-left,
-.oficio-layout__logo-right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.oficio-layout__logo-left svg,
-.oficio-layout__logo-right svg {
-  display: block;
-}
-
-.oficio-layout__institution {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.oficio-layout__inst-name {
-  font-family: Arial, sans-serif;
-  font-size: 11pt;
-  font-weight: bold;
-  color: #1b3a6b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-
-.oficio-layout__inst-faculty {
-  font-family: Arial, sans-serif;
-  font-size: 10pt;
-  font-weight: 600;
-  color: #2c5282;
-  line-height: 1.2;
-}
-
-.oficio-layout__inst-dept {
-  font-family: Arial, sans-serif;
-  font-size: 9pt;
-  color: #4a5568;
-  line-height: 1.2;
-}
-
-/* ── Línea divisoria del membrete ── */
-.oficio-layout__divider {
-  border: none;
-  border-top: 2px solid #1b3a6b;
-  margin: 6px 0 4px;
-}
-
-.oficio-layout__divider-thin {
-  border: none;
-  border-top: 1px solid #d4a843;
-  margin: 0 0 14px;
-}
-
-/* ── Folio y fecha ── */
+/* ── Folio ── */
 .oficio-layout__folio-row {
   display: flex;
   justify-content: flex-end;
@@ -95,7 +26,6 @@
 .oficio-layout__folio {
   font-size: 11pt;
   font-weight: bold;
-  color: #1a1a1a;
 }
 
 .oficio-layout__folio-num {
@@ -103,6 +33,7 @@
   font-style: italic;
 }
 
+/* ── Fecha ── */
 .oficio-layout__fecha-row {
   display: flex;
   justify-content: flex-end;
@@ -157,12 +88,13 @@
   word-break: break-word;
 }
 
-/* ── Cierre y firma ── */
+/* ── Cierre ── */
 .oficio-layout__cierre {
   font-size: 11pt;
   margin-bottom: 4px;
 }
 
+/* ── Firma ── */
 .oficio-layout__firma-block {
   margin-top: 32px;
   margin-bottom: 16px;
@@ -170,6 +102,14 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
+}
+
+.oficio-layout__atentamente {
+  text-align: center;
+  font-style: italic;
+  font-size: 10.5pt;
+  margin-bottom: 28px;
+  color: #4a5568;
 }
 
 .oficio-layout__firma-nombre {
@@ -214,10 +154,4 @@
   font-size: 7.5pt;
   color: #718096;
   line-height: 1.4;
-}
-
-/* ── Placeholders (texto gris cuando el campo está vacío) ── */
-.oficio-layout__placeholder {
-  color: #a0aec0;
-  font-style: italic;
 }

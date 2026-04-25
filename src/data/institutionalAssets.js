@@ -1,21 +1,22 @@
 // ============================================================
 // SGDI Web — institutionalAssets.js
-// Identidad institucional: nombre, membrete, logo SVG placeholder.
-// Para producción: reemplazar LOGO_SVG con el SVG real de la institución
-// y actualizar los campos de INSTITUTION con los datos reales.
+// Identidad institucional fija: nombre, ciudad, dirección, logos.
+// El área emisora (coordinación/departamento) NO va aquí —
+// se captura por documento como campo dinámico (area_emisora).
 // ============================================================
 
 export const INSTITUTION = {
-  name: 'Universidad Autónoma del Carmen',
+  name:    'Universidad Autónoma del Carmen',
   acronym: 'UNACAR',
   faculty: 'Facultad de Ciencias de la Información',
-  department: 'Coordinación de Posgrado e Investigación',
-  city: 'Ciudad del Carmen, Campeche',
+  city:    'Ciudad del Carmen, Campeche',
   address: 'Edificio del Campus I. Av. 56 Esquina Av. Concordia Número 4, Colonia Benito Juárez, C.P. 24180, Cd. del Carmen, Campeche.',
-  phone: 'Tel. (55) 5622-0000  |  Ext. 50000',
-  web: 'www.unacar.mx',
-  email: 'posgrado@fci.uim.edu.mx',
-  motto: 'Por la Grandeza de México',
+  phone:   'Tel. (938) 382-0600',
+  web:     'www.unacar.mx',
+  email:   'posgrado@fci.unacar.mx',
+  motto:   'Por la Grandeza de México',
+  // NOTA: 'department' eliminado intencionalmente.
+  // El área emisora se captura por documento en el campo 'area_emisora'.
 };
 
 // ── Logo principal (escudo UNACAR) ──

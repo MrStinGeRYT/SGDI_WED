@@ -1,0 +1,140 @@
+/* ============================================================
+   SGDI Web — ActaLayout.css
+   ============================================================ */
+
+.acta-layout {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Encabezado de sesión ── */
+.acta-layout__session-header {
+  text-align: center;
+  margin: 10px 0 12px;
+}
+
+.acta-layout__title {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #1b3a6b;
+  letter-spacing: 2px;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.acta-layout__num {
+  font-size: 10pt;
+  color: #4a5568;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ── Metadatos de sesión ── */
+.acta-layout__meta-row-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background-color: #f0f4f8;
+  border-left: 3px solid #1b3a6b;
+  border-radius: 0 3px 3px 0;
+}
+
+.acta-layout__meta-item {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 10.5pt;
+}
+
+.acta-layout__meta-label {
+  font-weight: bold;
+  color: #1b3a6b;
+  white-space: nowrap;
+}
+
+/* ── Separador ── */
+.acta-layout__separator {
+  border: none;
+  border-top: 1px solid #c6d4e6;
+  margin: 10px 0 14px;
+}
+
+/* ── Secciones (Asistentes, Orden del día, Acuerdos) ── */
+.acta-layout__section {
+  margin-bottom: 14px;
+}
+
+.acta-layout__section-title {
+  font-size: 10pt;
+  font-weight: bold;
+  color: #1b3a6b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #1b3a6b;
+  padding-bottom: 2px;
+  margin-bottom: 8px;
+}
+
+.acta-layout__section-body {
+  font-size: 10.5pt;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.65;
+  padding-left: 4px;
+}
+
+/* ── Próxima reunión ── */
+.acta-layout__proxima {
+  font-size: 10.5pt;
+  margin-bottom: 14px;
+  padding: 6px 10px;
+  background-color: #fffbeb;
+  border-left: 3px solid #d4a843;
+  border-radius: 0 3px 3px 0;
+}
+
+/* ── Cierre ── */
+.acta-layout__cierre {
+  font-size: 10.5pt;
+  font-style: italic;
+  color: #4a5568;
+  margin: 10px 0 0;
+}
+
+/* ── Firma ── */
+.acta-layout__firma-block {
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.acta-layout__firma-nombre {
+  font-weight: bold;
+  font-size: 11pt;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 4px;
+  width: 210px;
+}
+
+.acta-layout__firma-cargo {
+  font-size: 10pt;
+  color: #4a5568;
+}
+
+/* ── Pie institucional ── */
+.acta-layout__footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #d4a843;
+  text-align: center;
+  font-size: 7.5pt;
+  color: #718096;
+  line-height: 1.4;
+}

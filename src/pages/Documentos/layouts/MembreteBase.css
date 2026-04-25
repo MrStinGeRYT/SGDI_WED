@@ -1,0 +1,71 @@
+/* ============================================================
+   SGDI Web — MembreteBase.css
+   Encabezado institucional compartido entre todos los layouts.
+   También define .layout__placeholder, clase compartida.
+   ============================================================ */
+
+/* ── Encabezado con logos ── */
+.membrete-base {
+  display: grid;
+  grid-template-columns: 80px 1fr 70px;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+
+.membrete-base__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.membrete-base__institution {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.membrete-base__name {
+  font-family: Arial, sans-serif;
+  font-size: 10.5pt;
+  font-weight: bold;
+  color: #1b3a6b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  line-height: 1.2;
+}
+
+.membrete-base__faculty {
+  font-family: Arial, sans-serif;
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: #2c5282;
+  line-height: 1.2;
+}
+
+.membrete-base__dept {
+  font-family: Arial, sans-serif;
+  font-size: 9pt;
+  color: #4a5568;
+  line-height: 1.2;
+}
+
+/* ── Líneas divisorias ── */
+.membrete-base__divider-main {
+  border: none;
+  border-top: 2px solid #1b3a6b;
+  margin: 6px 0 3px;
+}
+
+.membrete-base__divider-thin {
+  border: none;
+  border-top: 1px solid #d4a843;
+  margin: 0 0 14px;
+}
+
+/* ── Placeholder compartido para todos los layouts ── */
+.layout__placeholder {
+  color: #b0bec5;
+  font-style: italic;
+}

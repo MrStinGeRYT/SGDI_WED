@@ -1,0 +1,142 @@
+/* ============================================================
+   SGDI Web — MemorandumLayout.css
+   ============================================================ */
+
+.memo-layout {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.memo-layout__title {
+  text-align: center;
+  font-size: 14pt;
+  font-weight: bold;
+  color: #1b3a6b;
+  letter-spacing: 4px;
+  margin: 12px 0 16px;
+}
+
+/* ── Tabla de metadatos ── */
+.memo-layout__data-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #c6d4e6;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.memo-layout__row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  padding: 6px 12px;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.memo-layout__row:last-child {
+  border-bottom: none;
+}
+
+.memo-layout__row:nth-child(even) {
+  background-color: #f7faff;
+}
+
+.memo-layout__key {
+  font-weight: bold;
+  font-size: 10pt;
+  color: #1b3a6b;
+  align-self: center;
+}
+
+.memo-layout__val {
+  font-size: 10.5pt;
+  align-self: center;
+}
+
+.memo-layout__val-bold {
+  font-weight: 600;
+}
+
+.memo-layout__sub {
+  color: #4a5568;
+  font-size: 9.5pt;
+}
+
+/* ── Badge de prioridad ── */
+.memo-layout__badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 9pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.memo-layout__badge--normal {
+  background-color: #ebf4ff;
+  color: #2b6cb0;
+}
+
+.memo-layout__badge--urgente {
+  background-color: #fff5f5;
+  color: #c53030;
+}
+
+.memo-layout__badge--informativo {
+  background-color: #f0fff4;
+  color: #276749;
+}
+
+/* ── Separador ── */
+.memo-layout__separator {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 0 0 14px;
+}
+
+/* ── Cuerpo ── */
+.memo-layout__cuerpo {
+  flex: 1;
+  text-align: justify;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 11pt;
+  line-height: 1.6;
+}
+
+/* ── Firma simple ── */
+.memo-layout__firma {
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.memo-layout__firma-nombre {
+  font-weight: bold;
+  font-size: 11pt;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 4px;
+  width: 210px;
+}
+
+.memo-layout__firma-cargo {
+  font-size: 10pt;
+  color: #4a5568;
+}
+
+/* ── Pie institucional ── */
+.memo-layout__footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #d4a843;
+  text-align: center;
+  font-size: 7.5pt;
+  color: #718096;
+  line-height: 1.4;
+}
