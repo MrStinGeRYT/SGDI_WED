@@ -122,12 +122,38 @@
   font-size: 11pt;
   border-top: 1px solid #1a1a1a;
   padding-top: 4px;
-  width: 210px;
+  max-width: 240px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.memo-layout__firma-img {
+  max-height: 56px;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.memo-layout__firma-texto {
+  font-size: 14pt;
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  color: #1a1a1a;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .memo-layout__firma-cargo {
   font-size: 10pt;
   color: #4a5568;
+  max-width: 240px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ── Pie institucional ── */

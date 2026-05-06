@@ -4,10 +4,11 @@
 // Renderiza dinámicamente los campos del schema del tipo documental.
 // ============================================================
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   CheckCircle, AlertCircle, Loader,
   Cloud, Mail, FileText, Info,
+  Upload, X as XIcon, PenLine,
 } from 'lucide-react';
 import './FieldsPanel.css';
 
@@ -29,12 +30,112 @@ function statusClass(s, ok) {
   return 'status-none';
 }
 
+// ── Campo de firma digital ───────────────────────────────────
+
+const SIGNATURE_MAX_BYTES = 1 * 1024 * 1024; // 1 MB
+const SIGNATURE_ACCEPT    = ['image/png', 'image/jpeg', 'image/jpg'];
+
+function SignatureField({ field, value, onChange, disabled }) {
+  const inputRef  = useRef(null);
+  const [error, setError] = useState(null);
+
+  const handleFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo
+    if (!SIGNATURE_ACCEPT.includes(file.type)) {
+      setError('Solo se permiten archivos PNG o JPG.');
+      e.target.value = '';
+      return;
+    }
+    // Validar tamaño
+    if (file.size > SIGNATURE_MAX_BYTES) {
+      setError('El archivo supera el límite de 1 MB.');
+      e.target.value = '';
+      return;
+    }
+
+    setError(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => onChange(field.id, ev.target.result);
+    reader.readAsDataURL(file);
+    e.target.value = ''; // reset para permitir recargar el mismo archivo
+  };
+
+  const handleRemove = () => {
+    setError(null);
+    onChange(field.id, '');
+  };
+
+  return (
+    <div className="fields-panel__signature">
+      {value ? (
+        // Vista previa de la firma cargada
+        <div className="fields-panel__signature-preview">
+          <img
+            src={value}
+            alt="Firma digital"
+            className="fields-panel__signature-img"
+          />
+          <button
+            type="button"
+            className="fields-panel__signature-remove"
+            onClick={handleRemove}
+            disabled={disabled}
+            title="Quitar firma"
+          >
+            <XIcon size={13} /> Quitar
+          </button>
+        </div>
+      ) : (
+        // Botón de carga
+        <button
+          type="button"
+          className="fields-panel__signature-upload"
+          onClick={() => inputRef.current?.click()}
+          disabled={disabled}
+        >
+          <Upload size={15} />
+          Cargar firma (PNG / JPG)
+        </button>
+      )}
+
+      {/* Input oculto */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/png,image/jpeg"
+        style={{ display: 'none' }}
+        onChange={handleFile}
+        disabled={disabled}
+      />
+
+      {/* Error de validación */}
+      {error && (
+        <span className="fields-panel__signature-error">
+          <AlertCircle size={12} /> {error}
+        </span>
+      )}
+    </div>
+  );
+}
+
 // ── Renderizador de campo individual ────────────────────────
 
 function Field({ field, value, onChange, disabled }) {
   const handleChange = (e) => onChange(field.id, e.target.value);
 
   switch (field.type) {
+    case 'signature':
+      return (
+        <SignatureField
+          field={field}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+        />
+      );
     case 'textarea':
       return (
         <textarea

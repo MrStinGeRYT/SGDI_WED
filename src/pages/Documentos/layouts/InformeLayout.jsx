@@ -72,6 +72,15 @@ export default function InformeLayout({ values = {} }) {
 
       {/* ── Firma ── */}
       <div className="informe-layout__firma-block">
+        {values.firma_imagen ? (
+          <img
+            src={values.firma_imagen}
+            alt="Firma digital"
+            className="informe-layout__firma-img"
+          />
+        ) : values.firma_texto ? (
+          <div className="informe-layout__firma-texto">{values.firma_texto}</div>
+        ) : null}
         <div className="informe-layout__firma-nombre">
           <Field value={values.responsable}       placeholder="Nombre del responsable" />
         </div>

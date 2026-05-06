@@ -84,6 +84,15 @@ export default function MemorandumLayout({ values = {} }) {
 
       {/* ── Firma simple ── */}
       <div className="memo-layout__firma">
+        {values.firma_imagen ? (
+          <img
+            src={values.firma_imagen}
+            alt="Firma digital"
+            className="memo-layout__firma-img"
+          />
+        ) : values.firma_texto ? (
+          <div className="memo-layout__firma-texto">{values.firma_texto}</div>
+        ) : null}
         <div className="memo-layout__firma-nombre">
           <Field value={values.de}       placeholder="Nombre del remitente" />
         </div>

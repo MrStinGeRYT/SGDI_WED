@@ -67,6 +67,15 @@ export default function OficioLayout({ values = {} }) {
       {/* ── Firma ── */}
       <div className="oficio-layout__firma-block">
         <div className="oficio-layout__atentamente">Atentamente</div>
+        {values.firma_imagen ? (
+          <img
+            src={values.firma_imagen}
+            alt="Firma digital"
+            className="oficio-layout__firma-img"
+          />
+        ) : values.firma_texto ? (
+          <div className="oficio-layout__firma-texto">{values.firma_texto}</div>
+        ) : null}
         <div className="oficio-layout__firma-nombre">
           <Field value={values.firmante}       placeholder="Nombre del firmante" />
         </div>

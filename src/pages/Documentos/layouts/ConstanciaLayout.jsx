@@ -11,7 +11,7 @@ import './ConstanciaLayout.css';
 
 export default function ConstanciaLayout({ values = {} }) {
   const fecha    = formatFecha(values.fecha);
-  const fechaExp = fecha ? `${INSTITUTION.city}, a ${fecha}.` : null;
+  const fechaExp = fecha ? `${INSTITUTION.city}, a ${fecha}` : null;
 
   return (
     <div className="constancia-layout">
@@ -58,9 +58,8 @@ export default function ConstanciaLayout({ values = {} }) {
 
       {/* ── Expedición ── */}
       <p className="constancia-layout__expedicion">
-        Se expide la presente constancia a petición del interesado, en{' '}
-        <strong>{INSTITUTION.city}</strong>,{' '}
-        <Field value={fechaExp} placeholder="a ___ de ______________ de 20__" />
+        Se expide la presente constancia a petición del interesado,{' '}
+        <Field value={fechaExp} placeholder={`${INSTITUTION.city}, a ___ de ______________ de 20__`} />.
       </p>
 
       {/* ── Firma ── */}

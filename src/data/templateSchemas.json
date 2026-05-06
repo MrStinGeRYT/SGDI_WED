@@ -12,8 +12,10 @@
       { "id": "cuerpo",             "label": "Cuerpo del documento",   "type": "textarea", "required": true,  "placeholder": "Por medio del presente...",                 "hint": "Redacta el contenido del oficio" },
       { "id": "firmante",           "label": "Nombre del firmante",    "type": "text",     "required": true,  "placeholder": "Dra. María González",                      "hint": "" },
       { "id": "cargo_firmante",     "label": "Cargo del firmante",     "type": "text",     "required": true,  "placeholder": "Coordinadora Académica",                   "hint": "" },
-      { "id": "copia",              "label": "c.c.p.",                 "type": "text",     "required": false, "placeholder": "Archivo, Interesado",                      "hint": "Separar con comas" },
-      { "id": "anexos",             "label": "Anexos",                 "type": "text",     "required": false, "placeholder": "Ninguno",                                  "hint": "" }
+      { "id": "copia",              "label": "c.c.p.",                 "type": "text",      "required": false, "placeholder": "Archivo, Interesado",                      "hint": "Separar con comas" },
+      { "id": "anexos",             "label": "Anexos",                 "type": "text",      "required": false, "placeholder": "Ninguno",                                  "hint": "" },
+      { "id": "firma_texto",       "label": "Firma (texto)",          "type": "text",      "required": false, "placeholder": "Escribe o pega tu firma aquí",              "hint": "Se muestra si no hay imagen de firma" },
+      { "id": "firma_imagen",       "label": "Firma (imagen)",          "type": "signature", "required": false, "placeholder": "",                                         "hint": "PNG o JPG, máx. 1 MB. Tiene prioridad sobre la firma en texto." }
     ]
   },
   "constancia": {
@@ -42,8 +44,10 @@
       { "id": "de",            "label": "De",                "type": "text",     "required": true,  "placeholder": "Dra. María González",                     "hint": "Remitente" },
       { "id": "cargo_de",      "label": "Cargo del remitente","type": "text",    "required": true,  "placeholder": "Coordinadora Académica",                   "hint": "" },
       { "id": "asunto",        "label": "Asunto",            "type": "text",     "required": true,  "placeholder": "Solicitud de autorización para evento",    "hint": "" },
-      { "id": "cuerpo",        "label": "Cuerpo",            "type": "textarea", "required": true,  "placeholder": "Por medio del presente, me permito comunicar...", "hint": "" },
-      { "id": "prioridad",     "label": "Prioridad",         "type": "text",     "required": false, "placeholder": "Normal",                                   "hint": "Normal / Urgente / Informativo" }
+      { "id": "cuerpo",        "label": "Cuerpo",            "type": "textarea",  "required": true,  "placeholder": "Por medio del presente, me permito comunicar...", "hint": "" },
+      { "id": "prioridad",     "label": "Prioridad",         "type": "text",      "required": false, "placeholder": "Normal",                                   "hint": "Normal / Urgente / Informativo" },
+      { "id": "firma_texto",  "label": "Firma (texto)",     "type": "text",      "required": false, "placeholder": "Escribe o pega tu firma aquí",              "hint": "Se muestra si no hay imagen de firma" },
+      { "id": "firma_imagen",  "label": "Firma (imagen)",     "type": "signature", "required": false, "placeholder": "",                                         "hint": "PNG o JPG, máx. 1 MB. Tiene prioridad sobre la firma en texto." }
     ]
   },
   "acta": {
@@ -75,8 +79,10 @@
       { "id": "cargo_responsable","label": "Cargo",                "type": "text",     "required": true,  "placeholder": "Coordinadora Académica",           "hint": "" },
       { "id": "introduccion",     "label": "I. Introducción",      "type": "textarea", "required": true,  "placeholder": "El presente informe tiene como objetivo...", "hint": "" },
       { "id": "desarrollo",       "label": "II. Desarrollo",       "type": "textarea", "required": true,  "placeholder": "Durante el periodo reportado se llevaron a cabo...", "hint": "Actividades, resultados, indicadores" },
-      { "id": "conclusiones",     "label": "III. Conclusiones",    "type": "textarea", "required": true,  "placeholder": "Con base en las actividades realizadas...", "hint": "" },
-      { "id": "recomendaciones",  "label": "IV. Recomendaciones",  "type": "textarea", "required": false, "placeholder": "Se recomienda...",                 "hint": "Opcional" }
+      { "id": "conclusiones",     "label": "III. Conclusiones",    "type": "textarea",  "required": true,  "placeholder": "Con base en las actividades realizadas...", "hint": "" },
+      { "id": "recomendaciones",  "label": "IV. Recomendaciones",  "type": "textarea",  "required": false, "placeholder": "Se recomienda...",                 "hint": "Opcional" },
+      { "id": "firma_texto",     "label": "Firma (texto)",        "type": "text",      "required": false, "placeholder": "Escribe o pega tu firma aquí",              "hint": "Se muestra si no hay imagen de firma" },
+      { "id": "firma_imagen",     "label": "Firma (imagen)",        "type": "signature", "required": false, "placeholder": "",                                  "hint": "PNG o JPG, máx. 1 MB. Tiene prioridad sobre la firma en texto." }
     ]
   }
 }

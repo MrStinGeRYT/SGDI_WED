@@ -12,9 +12,11 @@ import Table         from '../../components/ui/Table';
 import EmptyState    from '../../components/ui/EmptyState';
 import ConfirmDialog from '../../components/ui/ConfirmDialog';
 import RowActionsMenu from '../../components/ui/RowActionsMenu';
-import CreateDocumentModal from './CreateDocumentModal';
-import { useToast }  from '../../context/ToastContext';
-import { usePermissions } from '../../hooks/usePermissions';
+import CreateDocumentModal   from './CreateDocumentModal';
+import DocumentPreviewModal  from './DocumentPreviewModal';
+import DownloadModal         from './DownloadModal';
+import { useToast }          from '../../context/ToastContext';
+import { usePermissions }    from '../../hooks/usePermissions';
 import { getDocuments, archiveDocument } from '../../services/documentService';
 import { documentTypes } from '../../data/documentTypes.json';
 import { ROUTES } from '../../utils/constants';
@@ -24,7 +26,9 @@ export default function DocumentosPage() {
   const [documents, setDocuments]   = useState([]);
   const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState('');
-  const [archiveDoc, setArchiveDoc] = useState(null);
+  const [archiveDoc,  setArchiveDoc]  = useState(null);
+  const [previewDoc,  setPreviewDoc]  = useState(null);
+  const [downloadDoc, setDownloadDoc] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
 
@@ -97,7 +101,7 @@ export default function DocumentosPage() {
       cell: (row) => (
         <RowActionsMenu
           actions={[
-            { label: 'Previsualizar', icon: <Eye size={16} />, onClick: () => {} },
+            { label: 'Previsualizar', icon: <Eye size={16} />, onClick: () => setPreviewDoc(row) },
             {
               label: 'Editar',
               icon: <Edit size={16} />,
@@ -105,7 +109,7 @@ export default function DocumentosPage() {
               disabled: !can('document.edit'),
               tooltip: !can('document.edit') ? noPermissionMsg : undefined,
             },
-            { label: 'Descargar', icon: <Download size={16} />, onClick: () => showToast('Descargando documento…', 'info') },
+            { label: 'Descargar', icon: <Download size={16} />, onClick: () => setDownloadDoc(row) },
             {
               label: 'Enviar',
               icon: <Send size={16} />,
@@ -210,6 +214,22 @@ export default function DocumentosPage() {
           loadDocuments();
           navigate(ROUTES.DOCUMENTO_EDIT.replace(':id', doc.id));
         }}
+      />
+
+      {/* ── Vista previa ── */}
+      <DocumentPreviewModal
+        isOpen={!!previewDoc}
+        doc={previewDoc}
+        onClose={() => setPreviewDoc(null)}
+        onEdit={(id) => { setPreviewDoc(null); handleEdit(id); }}
+        onDownload={(doc) => { setPreviewDoc(null); setDownloadDoc(doc); }}
+      />
+
+      {/* ── Descarga Word / PDF ── */}
+      <DownloadModal
+        isOpen={!!downloadDoc}
+        doc={downloadDoc}
+        onClose={() => setDownloadDoc(null)}
       />
     </div>
   );
