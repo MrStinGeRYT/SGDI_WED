@@ -1,0 +1,121 @@
+// Prisma 5 schema — URL de conexión en datasource (estilo clásico)
+// Para migrar a PostgreSQL: cambiar provider a "postgresql" y DATABASE_URL en .env
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── NOTA: SQLite no soporta enums nativos; Prisma los maneja como String.
+// Al migrar a PostgreSQL los enums quedan como tipos reales sin cambios en el código.
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String   // bcrypt hash
+  role      String   @default("VIEWER") // ADMIN | EDITOR | VIEWER
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  documentsCreated Document[] @relation("DocumentCreatedBy")
+  documentsUpdated Document[] @relation("DocumentUpdatedBy")
+  templates        Template[]
+  auditLogs        AuditLog[]
+  emails           Email[]
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // oficio | circular | memorando | etc.
+  status      String   @default("DRAFT") // DRAFT | REVIEW | SIGNED | ARCHIVED
+
+  // Campos dinámicos serializados (contiene firma_texto entre otros)
+  // firma_imagen NO se guarda aquí como base64; se usa firmaImgUrl
+  fields      String   @default("{}")
+
+  firmaTexto  String?  // texto de firma (puede ir también dentro de fields)
+  firmaImgUrl String?  // ruta o URL del archivo de firma (multipart → storage)
+
+  cloudStatus String?
+  emailStatus String?
+
+  // Trazabilidad explícita
+  createdById String
+  updatedById String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones de trazabilidad
+  createdBy   User     @relation("DocumentCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?    @relation("DocumentUpdatedBy", fields: [updatedById], references: [id])
+
+  // Un documento puede tener correos asociados
+  emails      Email[]
+}
+
+model Template {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  type            String   // tipo documental que aplica esta plantilla
+  functionalGroup String?
+  tags            String?  // JSON array serializado: ["RRHH", "Legal"]
+  status          String   @default("ACTIVE") // ACTIVE | ARCHIVED
+  version         String?
+
+  // Archivo almacenado via storage.service.js
+  fileName        String
+  fileUrl         String
+
+  uploadedById    String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  uploadedBy      User @relation(fields: [uploadedById], references: [id])
+}
+
+// AuditLog es genérico — sin relación Prisma forzada a Document u otras entidades.
+// entityId/entityName son strings simples para identificar qué fue afectado.
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String   // CREATE | UPDATE | DELETE | EXPORT | SEND | LOGIN | ARCHIVE | etc.
+  module     String   // documents | templates | auth | emails | dashboard | etc.
+  entityId   String?  // ID del recurso afectado (string, sin foreign key)
+  entityName String?  // Nombre legible del recurso (p.ej. título del documento)
+  metadata   String?  // JSON extra: cambios específicos, detalles adicionales
+
+  // Quién hizo la acción (redundante a propósito para no depender de joins)
+  userId     String
+  userName   String
+  userRole   String
+  timestamp  DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id])
+}
+
+model Email {
+  id         String   @id @default(cuid())
+  subject    String
+  toList     String   // JSON array serializado: ["a@b.com", "c@d.com"]
+  body       String?
+  status     String   @default("PENDING") // PENDING | SENT | FAILED
+  sentAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  // Relación opcional con Document
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  // Quién envió
+  sentById   String
+  sentBy     User @relation(fields: [sentById], references: [id])
+}

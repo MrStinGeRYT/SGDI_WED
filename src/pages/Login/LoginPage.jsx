@@ -137,7 +137,7 @@ export default function LoginPage() {
 
         {/* Credenciales de demo */}
         <div className="login-demo" role="note">
-          <strong>Demo:</strong> usuario <code>admin</code> / contraseña <code>admin123</code>
+          <strong>Demo:</strong> <code>admin@sgdi.unacar.mx</code> / <code>Admin1234!</code>
         </div>
 
         <form

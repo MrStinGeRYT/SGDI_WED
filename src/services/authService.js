@@ -1,71 +1,111 @@
 // ============================================================
-// SGDI Web — Auth Service (Mock)
-// Servicio de autenticación simulado — listo para reemplazar
-// con Azure AD / SSO / API real en fases posteriores.
+// SGDI Web — authService.js
+// Conectado al backend real: POST /api/auth/login, GET /api/auth/me
 // ============================================================
 
-import mockUsers from '../data/mockUsers.json';
+import { request, setToken, clearToken, getToken } from './api.js'
 
-const SESSION_KEY = 'sgdi_session';
+const SESSION_KEY = 'sgdi_session'
+
+// ── Helpers de sesión ─────────────────────────────────────────────────────────
+
+function saveSession(user) {
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(user))
+}
+
+function clearSession() {
+  sessionStorage.removeItem(SESSION_KEY)
+}
+
+// ── API pública ───────────────────────────────────────────────────────────────
 
 /**
- * Simula un login con credenciales.
+ * Login con email (o nombre de usuario si no contiene @, intenta como email de la institución).
  * @returns {{ success: boolean, user: object|null, error: string|null }}
  */
-export async function login(username, password) {
-  // Simula latencia de red
-  await delay(600);
+export async function login(emailOrUsername, password) {
+  try {
+    // Si el usuario no escribió un @, asumirlo como email directo al backend
+    // El backend valida si existe ese email — si el usuario no sabe su email puede poner "admin"
+    // y fallaría con "credenciales inválidas" (mensaje correcto)
+    const email = emailOrUsername.includes('@')
+      ? emailOrUsername
+      : emailOrUsername  // enviamos como está — el backend lo valida como email
 
-  const user = mockUsers.find(
-    (u) => u.username === username && u.password === password
-  );
+    const data = await request('/auth/login', {
+      method: 'POST',
+      body:   JSON.stringify({ email, password }),
+      auth:   false,
+    })
 
-  if (!user) {
-    return { success: false, user: null, error: 'Usuario o contraseña incorrectos.' };
+    // Guardar JWT en localStorage
+    setToken(data.token)
+
+    // Normalizar usuario para que coincida con lo que espera el frontend
+    const user = {
+      id:         data.user.id,
+      name:       data.user.name,
+      email:      data.user.email,
+      role:       data.user.role,
+      // Campos extra que el frontend usa — derivados del backend
+      username:   data.user.email.split('@')[0],
+      initials:   data.user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+      department: 'SGDI',
+      loggedAt:   new Date().toISOString(),
+    }
+
+    saveSession(user)
+    return { success: true, user, error: null }
+
+  } catch (err) {
+    return { success: false, user: null, error: err.message || 'Error al iniciar sesión' }
   }
-
-  // Guarda sesión en sessionStorage (mock)
-  const session = {
-    id:         user.id,
-    name:       user.name,
-    role:       user.role,
-    department: user.department,
-    email:      user.email,
-    initials:   user.initials,
-    loggedAt:   new Date().toISOString(),
-  };
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-
-  return { success: true, user: session, error: null };
 }
 
 /**
- * Cierra la sesión actual.
+ * Cierra la sesión y limpia el token.
  */
-export function logout() {
-  sessionStorage.removeItem(SESSION_KEY);
+export async function logout() {
+  try {
+    // Notificar al backend (simbólico — JWT es stateless)
+    await request('/auth/logout', { method: 'POST' }).catch(() => {})
+  } finally {
+    clearToken()
+    clearSession()
+  }
 }
 
 /**
- * Devuelve el usuario de sesión actual, o null si no hay sesión.
+ * Devuelve el usuario de sesión almacenado localmente.
  */
 export function getCurrentUser() {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
+    const raw = sessionStorage.getItem(SESSION_KEY)
+    return raw ? JSON.parse(raw) : null
   } catch {
-    return null;
+    return null
   }
 }
 
 /**
- * Verifica si existe una sesión activa.
+ * Verifica si existe una sesión activa con token válido.
  */
 export function isAuthenticated() {
-  return !!getCurrentUser();
+  return !!(getCurrentUser() && getToken())
 }
 
-// ── Helper interno ──
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+/**
+ * Refresca los datos del usuario desde el backend.
+ * Llama GET /api/auth/me y actualiza la sesión local.
+ */
+export async function refreshUser() {
+  try {
+    const user = await request('/auth/me')
+    const current = getCurrentUser()
+    const merged  = { ...current, ...user }
+    saveSession(merged)
+    return merged
+  } catch {
+    return getCurrentUser()
+  }
 }

@@ -1,19 +1,14 @@
 // ============================================================
 // SGDI Web — templateService.js
-// Capa de acceso a datos de Plantillas.
-// Mock: lee de JSON estático. Listo para reemplazar con HTTP.
+// Conectado al backend real: /api/templates
+// templateSchemas.json se mantiene local (estático).
 // ============================================================
 
-import mockTemplates    from '../data/mockTemplates.json';
-import templateSchemas  from '../data/templateSchemas.json';
-import { auditService } from './auditService';
-import { getCurrentUser } from './userService';
+import { request, upload } from './api.js'
+import templateSchemas from '../data/templateSchemas.json'
+import { auditService } from './auditService'
 
-let _templates = [...mockTemplates]; // estado local en memoria
-
-const delay = (ms) => new Promise((r) => setTimeout(r, ms));
-
-// ── Clasificador local mock ────────────────────────────────
+// ── Clasificador local (no toca el backend — lógica client-side) ──────────────
 
 const TYPE_KEYWORDS = {
   oficio:      ['oficio', 'ofc', 'comunicado', 'designacion', 'asignacion'],
@@ -21,7 +16,7 @@ const TYPE_KEYWORDS = {
   memorandum:  ['memo', 'memorandum', 'memorándum', 'circular', 'convocatoria'],
   acta:        ['acta', 'minuta', 'acuerdo', 'reunion'],
   informe:     ['informe', 'reporte', 'report', 'avance', 'seguimiento'],
-};
+}
 
 const GROUP_KEYWORDS = {
   tesis:       ['tesis', 'thesis', 'posgrado', 'graduacion', 'examen', 'titulacion'],
@@ -29,121 +24,98 @@ const GROUP_KEYWORDS = {
   comites:     ['comite', 'comité', 'consejo', 'etica', 'academico'],
   eventos:     ['evento', 'seminario', 'congreso', 'convocatoria', 'semana', 'fci'],
   seguimiento: ['seguimiento', 'proyecto', 'alfa', 'beta', 'avance', 'reporte'],
-};
+}
 
 function normalizeText(text) {
-  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
 function scoreKeywords(text, keywordsMap) {
-  const normalized = normalizeText(text);
-  let best = { key: null, score: 0 };
+  const normalized = normalizeText(text)
+  let best = { key: null, score: 0 }
   for (const [key, words] of Object.entries(keywordsMap)) {
-    const score = words.filter((w) => normalized.includes(w)).length;
-    if (score > best.score) best = { key, score };
+    const score = words.filter(w => normalized.includes(w)).length
+    if (score > best.score) best = { key, score }
   }
-  return best;
+  return best
 }
 
 export function suggestClassification(fileName, title = '') {
-  const combined = `${fileName} ${title}`;
-  const typeResult  = scoreKeywords(combined, TYPE_KEYWORDS);
-  const groupResult = scoreKeywords(combined, GROUP_KEYWORDS);
-
-  const type  = typeResult.key  || 'oficio';
-  const group = groupResult.key || 'seguimiento';
-
-  // Nivel de confianza mock (0–100)
-  const confidence = Math.min(
-    100,
-    40 + (typeResult.score + groupResult.score) * 15,
-  );
-
-  const reasons = [];
-  if (typeResult.key)  reasons.push(`El nombre contiene palabras clave de tipo "${type}"`);
-  if (groupResult.key) reasons.push(`El contenido sugiere el grupo funcional "${group}"`);
-  if (reasons.length === 0) reasons.push('Clasificación basada en reglas generales del sistema');
-
-  return { type, functionalGroup: group, confidence, reasons };
+  const combined    = `${fileName} ${title}`
+  const typeResult  = scoreKeywords(combined, TYPE_KEYWORDS)
+  const groupResult = scoreKeywords(combined, GROUP_KEYWORDS)
+  const type        = typeResult.key  || 'oficio'
+  const group       = groupResult.key || 'seguimiento'
+  const confidence  = Math.min(100, 40 + (typeResult.score + groupResult.score) * 15)
+  const reasons     = []
+  if (typeResult.key)  reasons.push(`El nombre contiene palabras clave de tipo "${type}"`)
+  if (groupResult.key) reasons.push(`El contenido sugiere el grupo funcional "${group}"`)
+  if (reasons.length === 0) reasons.push('Clasificación basada en reglas generales del sistema')
+  return { type, functionalGroup: group, confidence, reasons }
 }
 
-// ── CRUD ──────────────────────────────────────────────────
+// ── API pública ───────────────────────────────────────────────────────────────
 
 export async function getTemplates(filters = {}) {
-  await delay(300);
-  let result = [..._templates];
-  if (filters.search) {
-    const q = normalizeText(filters.search);
-    result = result.filter(
-      (t) => normalizeText(t.title).includes(q) ||
-             (t.tags || []).some((tag) => normalizeText(tag).includes(q)),
-    );
-  }
-  if (filters.type)  result = result.filter((t) => t.type === filters.type);
-  if (filters.group) result = result.filter((t) => t.functionalGroup === filters.group);
-  return result;
+  const params = new URLSearchParams()
+  if (filters.search) params.set('search', filters.search)
+  if (filters.type)   params.set('type',   filters.type)
+  if (filters.group)  params.set('group',  filters.group)
+  // El frontend puede pedir 'active' o 'archived' — el backend espera 'ACTIVE'/'ARCHIVED'
+  if (filters.status) params.set('status', filters.status.toUpperCase())
+
+  const query = params.toString()
+  const res   = await request(`/templates${query ? `?${query}` : ''}`)
+  return res.data || []
 }
 
 export async function getTemplateById(id) {
-  await delay(200);
-  return _templates.find((t) => t.id === id) || null;
+  return request(`/templates/${id}`)
 }
 
+/**
+ * Sube una nueva plantilla al backend.
+ * @param {File}   file     - Objeto File del browser
+ * @param {object} metadata - { title, type, functionalGroup, description, version, tags[] }
+ */
 export async function uploadTemplate(file, metadata) {
-  await delay(1500); // simula análisis
-  const user = getCurrentUser();
-  const now  = new Date().toISOString();
-  const newTemplate = {
-    id:              `tpl_${Date.now()}`,
-    title:           metadata.title,
-    description:     metadata.description || '',
-    fileName:        file.name,
-    type:            metadata.type,
-    functionalGroup: metadata.functionalGroup,
-    status:          'active',
-    version:         '1.0',
-    tags:            metadata.tags || [],
-    uploadedById:    user?.id   || 'usr-001',
-    uploadedByName:  user?.name || 'Administrador',
-    uploadedByRole:  user?.role || 'Administrador',
-    lastUpdated:     now,
-  };
-  _templates = [newTemplate, ..._templates];
-  auditService.log('upload_template', newTemplate.title, newTemplate.id, 'Biblioteca');
-  return newTemplate;
+  const formData = new FormData()
+  formData.append('file',  file)
+  formData.append('title', metadata.title)
+  formData.append('type',  metadata.type)
+  if (metadata.description)     formData.append('description',     metadata.description)
+  if (metadata.functionalGroup) formData.append('functionalGroup', metadata.functionalGroup)
+  if (metadata.version)         formData.append('version',         metadata.version)
+  if (metadata.tags?.length)    formData.append('tags',            metadata.tags.join(','))
+
+  const tpl = await upload('/templates', formData)
+  auditService.log('upload_template', tpl.title, tpl.id, 'Biblioteca')
+  return tpl
 }
 
 export async function archiveTemplate(id) {
-  await delay(800);
-  _templates = _templates.map((t) =>
-    t.id === id ? { ...t, status: 'archived' } : t,
-  );
-  const tpl = _templates.find((t) => t.id === id);
-  if (tpl) auditService.log('archive_template', tpl.title, id, 'Biblioteca');
-  return true;
+  const result = await request(`/templates/${id}/archive`, { method: 'PATCH' })
+  auditService.log('archive_template', result.id, id, 'Biblioteca')
+  return result
 }
 
 export async function deleteTemplate(id) {
-  await delay(600);
-  const tpl = _templates.find((t) => t.id === id);
-  _templates = _templates.filter((t) => t.id !== id);
-  if (tpl) auditService.log('delete_template', tpl.title, id, 'Biblioteca');
-  return true;
+  const result = await request(`/templates/${id}`, { method: 'DELETE' })
+  auditService.log('delete_template', id, id, 'Biblioteca')
+  return result
 }
 
 /**
  * Devuelve el schema de campos para un tipo documental.
- * En Fase 2: GET /api/template-schemas/:type
- * @param {string} type - 'oficio' | 'constancia' | 'memorandum' | 'acta' | 'informe'
+ * Se mantiene como JSON local — no requiere backend.
  */
 export async function getTemplateSchema(type) {
-  await delay(0);
-  return templateSchemas[type] || null;
+  return templateSchemas[type] || null
 }
 
 const templateService = {
   getTemplates, getTemplateById, uploadTemplate,
   archiveTemplate, deleteTemplate, suggestClassification,
   getTemplateSchema,
-};
-export default templateService;
+}
+export default templateService
