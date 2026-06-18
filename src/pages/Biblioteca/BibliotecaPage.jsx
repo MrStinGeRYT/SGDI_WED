@@ -18,7 +18,7 @@ import EmptyState    from '../../components/ui/EmptyState';
 import UploadTemplateModal from './UploadTemplateModal';
 import { useToast }  from '../../context/ToastContext';
 import { usePermissions } from '../../hooks/usePermissions';
-import { getTemplates, archiveTemplate } from '../../services/templateService';
+import { getTemplates, archiveTemplate, deleteTemplate } from '../../services/templateService';
 import { documentTypes, functionalGroups } from '../../data/documentTypes.json';
 import './Biblioteca.css';
 import './UploadTemplateModal.css';
@@ -33,6 +33,7 @@ export default function BibliotecaPage() {
 
   const [previewTemplate, setPreviewTemplate]   = useState(null);
   const [archiveTarget, setArchiveTarget]       = useState(null);
+  const [deleteTarget, setDeleteTarget]         = useState(null);
   const [isProcessing, setIsProcessing]         = useState(false);
   const [showUpload, setShowUpload]             = useState(false);
 
@@ -74,7 +75,7 @@ export default function BibliotecaPage() {
     {
       header: 'Grupo Funcional',
       accessor: 'functionalGroup',
-      cell: (row) => documentTypes.find((t) => t.id === row.functionalGroup)?.name || row.functionalGroup,
+      cell: (row) => functionalGroups.find((g) => g.id === row.functionalGroup)?.name || row.functionalGroup,
     },
     { header: 'Versión', accessor: 'version', align: 'center' },
     {
@@ -82,8 +83,8 @@ export default function BibliotecaPage() {
       accessor: 'status',
       align: 'center',
       cell: (row) => (
-        <Badge variant={row.status === 'active' ? 'success' : 'neutral'} dot>
-          {row.status === 'active' ? 'Activo' : 'Archivado'}
+        <Badge variant={row.status?.toUpperCase() === 'ACTIVE' ? 'success' : 'neutral'} dot>
+          {row.status?.toUpperCase() === 'ACTIVE' ? 'Activo' : 'Archivado'}
         </Badge>
       ),
     },
@@ -127,7 +128,7 @@ export default function BibliotecaPage() {
             {
               label: 'Eliminar',
               icon: <Trash size={16} />,
-              onClick: () => showToast('Eliminar no disponible en esta fase', 'info'),
+              onClick: (e) => { e.stopPropagation(); setDeleteTarget(row); },
               danger: true,
               disabled: !can('template.delete'),
               tooltip: !can('template.delete') ? noPermissionMsg : undefined,
@@ -140,11 +141,30 @@ export default function BibliotecaPage() {
 
   const handleArchive = async () => {
     setIsProcessing(true);
-    await archiveTemplate(archiveTarget.id);
-    setIsProcessing(false);
-    setArchiveTarget(null);
-    showToast(`Plantilla "${archiveTarget.title}" archivada.`, 'success');
-    loadTemplates();
+    try {
+      await archiveTemplate(archiveTarget.id);
+      showToast(`Plantilla "${archiveTarget.title}" archivada.`, 'success');
+    } catch {
+      showToast('Error al archivar la plantilla.', 'error');
+    } finally {
+      setIsProcessing(false);
+      setArchiveTarget(null);
+      loadTemplates();
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsProcessing(true);
+    try {
+      await deleteTemplate(deleteTarget.id);
+      showToast(`Plantilla "${deleteTarget.title}" eliminada.`, 'success');
+    } catch {
+      showToast('Error al eliminar la plantilla.', 'error');
+    } finally {
+      setIsProcessing(false);
+      setDeleteTarget(null);
+      loadTemplates();
+    }
   };
 
   return (
@@ -257,8 +277,8 @@ export default function BibliotecaPage() {
             <Card key={tpl.id} className="template-card">
               <Card.Body>
                 <div className="template-card__header">
-                  <Badge variant={tpl.status === 'active' ? 'success' : 'neutral'} dot>
-                    {tpl.status === 'active' ? 'Activo' : 'Archivado'}
+                  <Badge variant={tpl.status?.toUpperCase() === 'ACTIVE' ? 'success' : 'neutral'} dot>
+                    {tpl.status?.toUpperCase() === 'ACTIVE' ? 'Activo' : 'Archivado'}
                   </Badge>
                   <div className="template-card__actions">
                     <button className="btn btn--icon btn--ghost btn--sm" onClick={() => setPreviewTemplate(tpl)}>
@@ -364,6 +384,18 @@ export default function BibliotecaPage() {
         message={`¿Estás seguro de que deseas archivar "${archiveTarget?.title}"? Ya no estará disponible para nuevos documentos.`}
         confirmText="Archivar"
         confirmVariant="warning"
+        isLoading={isProcessing}
+      />
+
+      {/* Confirm eliminar */}
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Eliminar Plantilla"
+        message={`¿Estás seguro de que deseas eliminar permanentemente "${deleteTarget?.title}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        confirmVariant="danger"
         isLoading={isProcessing}
       />
 

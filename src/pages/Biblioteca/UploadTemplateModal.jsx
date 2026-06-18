@@ -80,21 +80,27 @@ export default function UploadTemplateModal({ isOpen, onClose, onUploaded }) {
   async function handleConfirm() {
     if (!title.trim()) return;
     setStep('uploading');
+    setFileError('');
 
-    const { uploadTemplate } = await import('../../services/templateService');
-    const newTemplate = await uploadTemplate(file, {
-      title: title.trim(),
-      type,
-      functionalGroup: group,
-      description: description.trim(),
-      tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
-    });
+    try {
+      const { uploadTemplate } = await import('../../services/templateService');
+      const newTemplate = await uploadTemplate(file, {
+        title: title.trim(),
+        type,
+        functionalGroup: group,
+        description: description.trim(),
+        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+      });
 
-    setStep('done');
-    setTimeout(() => {
-      handleClose();
-      if (onUploaded) onUploaded(newTemplate);
-    }, 1200);
+      setStep('done');
+      setTimeout(() => {
+        handleClose();
+        if (onUploaded) onUploaded(newTemplate);
+      }, 1200);
+    } catch (err) {
+      setFileError(err.message || 'Error al guardar la plantilla. Inténtalo de nuevo.');
+      setStep('review');
+    }
   }
 
   const conf = suggestion ? CONFIDENCE_LABEL(suggestion.confidence) : null;
@@ -222,6 +228,17 @@ export default function UploadTemplateModal({ isOpen, onClose, onUploaded }) {
           </div>
 
           <div className="upload-review__actions">
+            {fileError && (
+              <div style={{
+                width: '100%', padding: 'var(--space-3) var(--space-4)',
+                background: 'var(--color-danger-50)', border: '1px solid var(--color-danger-200)',
+                borderRadius: 'var(--radius-md)', color: 'var(--color-danger)',
+                fontSize: 'var(--font-size-sm)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
+              }}>
+                <AlertCircle size={14} style={{ flexShrink: 0 }} />
+                {fileError}
+              </div>
+            )}
             <Button variant="ghost" onClick={() => { reset(); setStep('select'); }}>
               Cambiar archivo
             </Button>

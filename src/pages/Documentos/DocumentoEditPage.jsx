@@ -51,7 +51,13 @@ export default function DocumentoEditPage() {
     if (data) {
       setDoc(data);
       setTitle(data.title || '');
-      setFieldValues(data.fields || {});
+      // Si el backend guarda firmaImgUrl en el raíz del doc (fuera de fields),
+      // inyectarla en fieldValues para que SignatureField la muestre al recargar.
+      const baseFields = data.fields || {};
+      const merged = data.firmaImgUrl && !baseFields.firma_imagen
+        ? { ...baseFields, firma_imagen: data.firmaImgUrl }
+        : baseFields;
+      setFieldValues(merged);
       setCloudStatus(data.cloudStatus || 'none');
       setEmailStatus(data.emailStatus || 'none');
       // Cargar schema del tipo documental

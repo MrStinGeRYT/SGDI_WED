@@ -37,9 +37,10 @@ export async function request(path, { auth = true, ...options } = {}) {
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
 
-  // 401: token expirado o inválido → limpiar sesión y recargar
+  // 401: token expirado o inválido → limpiar token + sesión y redirigir al login
   if (res.status === 401) {
     clearToken()
+    sessionStorage.removeItem('sgdi_session')
     window.location.href = '/'
     return
   }
@@ -73,6 +74,7 @@ export async function upload(path, formData) {
 
   if (res.status === 401) {
     clearToken()
+    sessionStorage.removeItem('sgdi_session')
     window.location.href = '/'
     return
   }

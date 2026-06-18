@@ -95,17 +95,14 @@ export function isAuthenticated() {
 }
 
 /**
- * Refresca los datos del usuario desde el backend.
- * Llama GET /api/auth/me y actualiza la sesión local.
+ * Refresca los datos del usuario desde el backend (GET /api/auth/me).
+ * Actualiza la sesión local con los datos frescos.
+ * Lanza si hay error de red u otro fallo — el caller decide el fallback.
  */
 export async function refreshUser() {
-  try {
-    const user = await request('/auth/me')
-    const current = getCurrentUser()
-    const merged  = { ...current, ...user }
-    saveSession(merged)
-    return merged
-  } catch {
-    return getCurrentUser()
-  }
+  const data    = await request('/auth/me')
+  const current = getCurrentUser()
+  const merged  = { ...current, ...data }
+  saveSession(merged)
+  return merged
 }

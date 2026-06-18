@@ -6,17 +6,35 @@
 // ============================================================
 
 // ── Tabla de permisos por rol ──────────────────────────────
+// Se mapean tanto los roles del backend (ADMIN, EDITOR, VIEWER)
+// como los nombres en español del mock — para compatibilidad total.
+const FULL_ADMIN_PERMS = [
+  'template.upload', 'template.edit', 'template.archive',
+  'template.delete', 'template.classify', 'template.view',
+  'document.create', 'document.edit', 'document.archive',
+  'document.delete', 'document.send', 'document.upload_cloud',
+  'document.view',
+  'email.send', 'email.view',
+  'audit.view',
+  'config.edit',
+]
+
 const ROLE_PERMISSIONS = {
-  'Administrador': [
-    'template.upload', 'template.edit', 'template.archive',
-    'template.delete', 'template.classify', 'template.view',
-    'document.create', 'document.edit', 'document.archive',
-    'document.delete', 'document.send', 'document.upload_cloud',
-    'document.view',
+  // ── Roles del backend (JWT) ──
+  'ADMIN': FULL_ADMIN_PERMS,
+  'EDITOR': [
+    'template.edit', 'template.view', 'template.upload', 'template.classify',
+    'document.create', 'document.edit', 'document.view', 'document.upload_cloud',
     'email.send', 'email.view',
     'audit.view',
-    'config.edit',
   ],
+  'VIEWER': [
+    'template.view',
+    'document.view',
+    'email.view',
+  ],
+  // ── Roles mock en español (compatibilidad) ──
+  'Administrador': FULL_ADMIN_PERMS,
   'Coordinadora Académica': [
     'template.upload', 'template.edit', 'template.classify', 'template.view',
     'document.create', 'document.edit', 'document.view', 'document.upload_cloud',

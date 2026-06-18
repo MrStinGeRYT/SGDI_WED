@@ -1,14 +1,12 @@
 // ============================================================
 // SGDI Web — DownloadModal.jsx
 // Modal selector de formato de descarga: Word (.docx) / PDF.
-// Fase actual: mock (exportService stub).
-// Fase E5: reemplazar exportService con llamada real a API.
+// Fase actual: preview informativo (exportación no disponible).
+// Fase E5: conectar exportService real con generación de archivo.
 // ============================================================
 
-import React, { useState, useEffect } from 'react';
-import { X, Loader, Info } from 'lucide-react';
-import { exportDocument } from '../../services/exportService';
-import { useToast } from '../../context/ToastContext';
+import React, { useEffect } from 'react';
+import { X, Download, Info, Clock } from 'lucide-react';
 import './DownloadModal.css';
 
 // ── Formatos disponibles ─────────────────────────────────────
@@ -32,16 +30,13 @@ const FORMATS = [
 // ── Componente principal ─────────────────────────────────────
 
 export default function DownloadModal({ isOpen, doc, onClose }) {
-  const [loadingFormat, setLoadingFormat] = useState(null); // 'docx' | 'pdf' | null
-  const { showToast } = useToast();
-
   // Cerrar con Escape
   useEffect(() => {
     if (!isOpen) return;
-    const handleKey = (e) => { if (e.key === 'Escape' && !loadingFormat) onClose(); };
+    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [isOpen, onClose, loadingFormat]);
+  }, [isOpen, onClose]);
 
   // Bloquear scroll del body
   useEffect(() => {
@@ -51,32 +46,13 @@ export default function DownloadModal({ isOpen, doc, onClose }) {
 
   if (!isOpen || !doc) return null;
 
-  const handleDownload = async (format) => {
-    if (loadingFormat) return; // evitar doble clic
-    setLoadingFormat(format);
-    try {
-      const result = await exportDocument(doc.id, format);
-      if (result.success) {
-        // FASE E5: aquí se dispara triggerDownload(blob, filename)
-        showToast(`Documento preparado como ${result.label}.`, 'success');
-        onClose();
-      } else {
-        showToast('No se pudo preparar el documento.', 'error');
-      }
-    } catch {
-      showToast('Error al procesar la descarga.', 'error');
-    } finally {
-      setLoadingFormat(null);
-    }
-  };
-
   return (
     <div
       className="download-modal__overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Seleccionar formato de descarga"
-      onClick={(e) => { if (e.target === e.currentTarget && !loadingFormat) onClose(); }}
+      aria-label="Descargar documento"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className="download-modal__panel">
 
@@ -89,7 +65,6 @@ export default function DownloadModal({ isOpen, doc, onClose }) {
           <button
             className="btn btn--ghost btn--icon"
             onClick={onClose}
-            disabled={!!loadingFormat}
             aria-label="Cerrar"
             title="Cerrar (Esc)"
           >
@@ -100,42 +75,68 @@ export default function DownloadModal({ isOpen, doc, onClose }) {
         {/* ── Cuerpo ── */}
         <div className="download-modal__body">
 
-          {/* Selector de formato */}
-          <div className="download-modal__formats">
-            {FORMATS.map((fmt) => {
-              const isLoading = loadingFormat === fmt.id;
-              return (
-                <button
-                  key={fmt.id}
-                  className={`download-modal__format-card${isLoading ? ' loading' : ''}`}
-                  onClick={() => handleDownload(fmt.id)}
-                  disabled={!!loadingFormat}
-                  aria-label={`Descargar como ${fmt.name} (${fmt.ext})`}
-                >
-                  {/* Ícono */}
-                  <div className={`download-modal__format-icon download-modal__format-icon--${fmt.id}`}>
-                    {isLoading
-                      ? <Loader size={22} className="spin" />
-                      : fmt.emoji
-                    }
-                  </div>
-
-                  {/* Info */}
-                  <div className="download-modal__format-info">
-                    <div className="download-modal__format-name">{fmt.name}</div>
-                    <div className="download-modal__format-ext">{fmt.ext} — {fmt.desc}</div>
-                  </div>
-                </button>
-              );
-            })}
+          {/* Banner de aviso prominente */}
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: '12px',
+            padding: '14px 16px',
+            background: 'var(--color-warning-50, rgba(234,179,8,0.08))',
+            border: '1px solid var(--color-warning-300, rgba(234,179,8,0.4))',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: '20px',
+          }}>
+            <Clock size={18} style={{ color: 'var(--color-warning)', flexShrink: 0, marginTop: '1px' }} />
+            <div>
+              <div style={{ fontWeight: 'var(--font-weight-semibold)', fontSize: 'var(--font-size-sm)', color: 'var(--color-warning-700, var(--color-warning))' }}>
+                Exportación no disponible aún
+              </div>
+              <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: '4px', lineHeight: 1.5 }}>
+                La generación de archivos .docx y .pdf estará disponible en la Fase E5.
+                Los botones se habilitarán automáticamente cuando el servicio esté activo.
+              </div>
+            </div>
           </div>
 
-          {/* Nota informativa */}
-          <div className="download-modal__note">
-            <Info size={14} style={{ flexShrink: 0, marginTop: '1px' }} />
+          {/* Selector de formato — deshabilitado visualmente */}
+          <div className="download-modal__formats">
+            {FORMATS.map((fmt) => (
+              <div
+                key={fmt.id}
+                className="download-modal__format-card"
+                style={{ opacity: 0.45, cursor: 'not-allowed', pointerEvents: 'none' }}
+                aria-disabled="true"
+              >
+                {/* Ícono */}
+                <div className={`download-modal__format-icon download-modal__format-icon--${fmt.id}`}>
+                  {fmt.emoji}
+                </div>
+
+                {/* Info */}
+                <div className="download-modal__format-info">
+                  <div className="download-modal__format-name">{fmt.name}</div>
+                  <div className="download-modal__format-ext">{fmt.ext} — {fmt.desc}</div>
+                </div>
+
+                {/* Badge de estado */}
+                <span style={{
+                  marginLeft: 'auto', flexShrink: 0,
+                  fontSize: '10px', fontWeight: 600, letterSpacing: '0.04em',
+                  padding: '2px 8px', borderRadius: '999px',
+                  background: 'var(--color-surface-alt)',
+                  color: 'var(--color-text-muted)',
+                  border: '1px solid var(--color-border)',
+                }}>
+                  Próximamente
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Nota secundaria */}
+          <div className="download-modal__note" style={{ marginTop: '16px' }}>
+            <Info size={13} style={{ flexShrink: 0, marginTop: '1px' }} />
             <span>
-              La generación real de archivos estará disponible en la Fase E5 (backend de exportación).
-              Por ahora la descarga queda registrada y lista para cuando el servicio esté activo.
+              Mientras tanto, puedes usar el botón <strong>Editar</strong> para revisar
+              el contenido del documento en el editor institucional.
             </span>
           </div>
 
@@ -144,3 +145,4 @@ export default function DownloadModal({ isOpen, doc, onClose }) {
     </div>
   );
 }
+

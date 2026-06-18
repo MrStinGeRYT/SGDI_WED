@@ -3,7 +3,7 @@
 // Historial de actividad institucional del sistema
 // ============================================================
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { ClipboardList, Search, Filter, User, Calendar } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
@@ -44,10 +44,16 @@ export default function BitacoraPage() {
   const [log, setLog]           = useState([]);
   const [search, setSearch]     = useState('');
   const [filterModule, setFilterModule] = useState('Todos');
+  const [loading, setLoading]   = useState(true);
 
-  useEffect(() => {
-    setLog(auditService.getLog());
+  const fetchLog = useCallback(async () => {
+    setLoading(true);
+    const data = await auditService.getLog();
+    setLog(data);
+    setLoading(false);
   }, []);
+
+  useEffect(() => { fetchLog(); }, [fetchLog]);
 
   const filtered = useMemo(() => {
     let result = [...log];
@@ -139,7 +145,11 @@ export default function BitacoraPage() {
       </div>
 
       {/* Lista de eventos */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <Card>
+          <EmptyState icon={ClipboardList} title="Cargando bitácora…" description="Consultando el historial de actividad." />
+        </Card>
+      ) : filtered.length === 0 ? (
         <Card>
           <EmptyState
             icon={ClipboardList}

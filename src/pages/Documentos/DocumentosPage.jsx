@@ -50,9 +50,11 @@ export default function DocumentosPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'borrador':  return <Badge variant="warning" dot>Borrador</Badge>;
+      case 'revision':  return <Badge variant="info"    dot>En revisión</Badge>;
+      case 'firmado':   return <Badge variant="success" dot>Firmado</Badge>;
       case 'enviado':   return <Badge variant="success" dot>Enviado</Badge>;
       case 'archivado': return <Badge variant="neutral" dot>Archivado</Badge>;
-      default:          return <Badge variant="info" dot>{status}</Badge>;
+      default:          return <Badge variant="neutral" dot>{status}</Badge>;
     }
   };
 

@@ -10,6 +10,7 @@ import {
   Cloud, Mail, FileText, Info,
   Upload, X as XIcon, PenLine,
 } from 'lucide-react';
+import { uploadFirmaImagen } from '../../services/documentService';
 import './FieldsPanel.css';
 
 // ── Helpers de estado ────────────────────────────────────────
@@ -32,35 +33,42 @@ function statusClass(s, ok) {
 
 // ── Campo de firma digital ───────────────────────────────────
 
-const SIGNATURE_MAX_BYTES = 1 * 1024 * 1024; // 1 MB
-const SIGNATURE_ACCEPT    = ['image/png', 'image/jpeg', 'image/jpg'];
+const SIGNATURE_MAX_BYTES = 5 * 1024 * 1024; // 5 MB — igual que el backend
+const SIGNATURE_ACCEPT    = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
-function SignatureField({ field, value, onChange, disabled }) {
-  const inputRef  = useRef(null);
-  const [error, setError] = useState(null);
+// docId: ID del documento para llamar al endpoint correcto
+function SignatureField({ field, value, onChange, disabled, docId }) {
+  const inputRef              = useRef(null);
+  const [error, setError]     = useState(null);
+  const [uploading, setUploading] = useState(false);
 
-  const handleFile = (e) => {
+  const handleFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validar tipo
     if (!SIGNATURE_ACCEPT.includes(file.type)) {
-      setError('Solo se permiten archivos PNG o JPG.');
+      setError('Solo se permiten archivos PNG, JPG o WEBP.');
       e.target.value = '';
       return;
     }
-    // Validar tamaño
     if (file.size > SIGNATURE_MAX_BYTES) {
-      setError('El archivo supera el límite de 1 MB.');
+      setError('El archivo supera el límite de 5 MB.');
       e.target.value = '';
       return;
     }
 
     setError(null);
-    const reader = new FileReader();
-    reader.onload = (ev) => onChange(field.id, ev.target.result);
-    reader.readAsDataURL(file);
-    e.target.value = ''; // reset para permitir recargar el mismo archivo
+    setUploading(true);
+    try {
+      const result = await uploadFirmaImagen(docId, file);
+      // Guardar la URL del servidor — no base64
+      onChange(field.id, result.firmaImgUrl);
+    } catch (err) {
+      setError(err.message || 'Error al subir la firma. Inténtalo de nuevo.');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
   };
 
   const handleRemove = () => {
@@ -68,16 +76,17 @@ function SignatureField({ field, value, onChange, disabled }) {
     onChange(field.id, '');
   };
 
+  const hasImage = value && (value.startsWith('http') || value.startsWith('data:'));
+
   return (
     <div className="fields-panel__signature">
-      {value ? (
-        // Vista previa de la firma cargada
+      {uploading ? (
+        <div className="fields-panel__signature-upload" style={{ cursor: 'default' }}>
+          <Loader size={15} className="spin" /> Subiendo firma…
+        </div>
+      ) : hasImage ? (
         <div className="fields-panel__signature-preview">
-          <img
-            src={value}
-            alt="Firma digital"
-            className="fields-panel__signature-img"
-          />
+          <img src={value} alt="Firma digital" className="fields-panel__signature-img" />
           <button
             type="button"
             className="fields-panel__signature-remove"
@@ -89,29 +98,25 @@ function SignatureField({ field, value, onChange, disabled }) {
           </button>
         </div>
       ) : (
-        // Botón de carga
         <button
           type="button"
           className="fields-panel__signature-upload"
           onClick={() => inputRef.current?.click()}
           disabled={disabled}
         >
-          <Upload size={15} />
-          Cargar firma (PNG / JPG)
+          <Upload size={15} /> Cargar firma (PNG / JPG / WEBP)
         </button>
       )}
 
-      {/* Input oculto */}
       <input
         ref={inputRef}
         type="file"
-        accept="image/png,image/jpeg"
+        accept="image/png,image/jpeg,image/webp"
         style={{ display: 'none' }}
         onChange={handleFile}
-        disabled={disabled}
+        disabled={disabled || uploading}
       />
 
-      {/* Error de validación */}
       {error && (
         <span className="fields-panel__signature-error">
           <AlertCircle size={12} /> {error}
@@ -123,7 +128,7 @@ function SignatureField({ field, value, onChange, disabled }) {
 
 // ── Renderizador de campo individual ────────────────────────
 
-function Field({ field, value, onChange, disabled }) {
+function Field({ field, value, onChange, disabled, docId }) {
   const handleChange = (e) => onChange(field.id, e.target.value);
 
   switch (field.type) {
@@ -134,6 +139,7 @@ function Field({ field, value, onChange, disabled }) {
           value={value}
           onChange={onChange}
           disabled={disabled}
+          docId={docId}
         />
       );
     case 'textarea':
@@ -194,6 +200,7 @@ export default function FieldsPanel({
   onSaveAsTemplate,
 }) {
   const [activeTab, setActiveTab] = useState('fields');
+  const docId = doc?.id;
 
   return (
     <div className="fields-panel">
@@ -231,6 +238,7 @@ export default function FieldsPanel({
                       value={fieldValues[field.id]}
                       onChange={onFieldChange}
                       disabled={disabled}
+                      docId={docId}
                     />
                     {field.hint && (
                       <span className="fields-panel__hint">{field.hint}</span>

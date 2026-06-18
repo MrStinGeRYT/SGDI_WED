@@ -17,6 +17,7 @@ import { AiStatusIndicator, Ms365StatusIndicator } from '../../components/ui/Sta
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import { connectMs365, MS365_INTEGRATIONS } from '../../services/ms365Service';
+import { getCurrentUser } from '../../services/userService';
 import { documentTypes, functionalGroups } from '../../data/documentTypes.json';
 import './Configuracion.css';
 
@@ -197,26 +198,66 @@ function TabDocumental() {
 
 // ── Render de la pestaña Preferencias ──
 function TabPreferencias({ theme, toggleTheme }) {
+  const user = getCurrentUser();
+
   return (
-    <Card>
-      <Card.Header>
-        <Card.Title>Preferencias de Interfaz</Card.Title>
-      </Card.Header>
-      <Card.Body>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-4)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            {theme === 'dark' ? <Moon size={24} /> : <Monitor size={24} />}
-            <div>
-              <div style={{ fontWeight: 'var(--font-weight-medium)' }}>Modo Oscuro</div>
-              <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Cambia la apariencia del sistema</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+
+      {/* Perfil del usuario autenticado */}
+      {user && (
+        <Card>
+          <Card.Header>
+            <Card.Title>Mi cuenta</Card.Title>
+          </Card.Header>
+          <Card.Body>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background: 'var(--color-primary-600)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-lg)',
+                color: '#fff', flexShrink: 0,
+              }}>
+                {user.name?.split(' ').filter(Boolean).slice(0,2).map(n => n[0]).join('').toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontWeight: 'var(--font-weight-semibold)', fontSize: 'var(--font-size-base)' }}>
+                  {user.name}
+                </div>
+                <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+                  {user.email}
+                </div>
+                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>
+                  Rol: <strong>{user.role}</strong>
+                </div>
+              </div>
             </div>
+          </Card.Body>
+        </Card>
+      )}
+
+      {/* Tema de interfaz */}
+      <Card>
+        <Card.Header>
+          <Card.Title>Preferencias de Interfaz</Card.Title>
+        </Card.Header>
+        <Card.Body>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-4)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+              {theme === 'dark' ? <Moon size={24} /> : <Monitor size={24} />}
+              <div>
+                <div style={{ fontWeight: 'var(--font-weight-medium)' }}>Modo Oscuro</div>
+                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>Cambia la apariencia del sistema</div>
+              </div>
+            </div>
+            <Button variant={theme === 'dark' ? 'primary' : 'outline'} onClick={toggleTheme}>
+              {theme === 'dark' ? 'Desactivar' : 'Activar'} Modo Oscuro
+            </Button>
           </div>
-          <Button variant={theme === 'dark' ? 'primary' : 'outline'} onClick={toggleTheme}>
-            {theme === 'dark' ? 'Desactivar' : 'Activar'} Modo Oscuro
-          </Button>
-        </div>
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+
+    </div>
   );
 }
 
